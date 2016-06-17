@@ -1,0 +1,7 @@
+<h2> Training Data for {{mouse_ID}} </h2>
+
+
+{% for file in mouseFiles %}
+	<li> <a href="/getData/download_data/{{mouse_ID}}/{{file}}/" > {{file}} </li>
+{% endfor %}
+

@@ -1,0 +1,15 @@
+{% if isOnline %}
+
+<form method="post" enctype="multipart/form-data">
+{% csrf_token %}
+    <input type="file" name="sentFile" />
+    <input type="submit" name="submit" value="Upload" />
+</form>
+
+{% endif %}
+
+{if not isOnline %}
+
+The box is not online so it is not possible to upload to :(
+
+{% endif%}

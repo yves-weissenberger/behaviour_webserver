@@ -1,0 +1,26 @@
+
+<html>
+
+<h2> Access to Individual Data Files, sorted by Mouse </h2>
+
+
+{% for mouse_dir in mouse_dirs %}
+	<li> <a href="/getData/download_data/{{mouse_dir}}/"> {{mouse_dir}} </a>   </li>
+{% endfor %}
+
+<h2> Download entire mouse training dataset as zip file </h2>
+
+	<form action="{% url 'getData:download_data' %}" method="post"> 
+	{% csrf_token %}
+	  <select name="Mouse_ID">
+
+	    {% for mouse_name in mouse_dirs %}
+	    <option value={{mouse_name}}> {{mouse_name}} </option>
+	    {% endfor %}
+	  </select>
+	  <input type="submit" value="Download">
+	</form> 
+
+
+
+</html>

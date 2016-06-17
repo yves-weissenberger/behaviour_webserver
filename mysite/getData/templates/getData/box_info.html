@@ -1,0 +1,43 @@
+<h1> Box {{box_nr}} </h1>
+
+{% if isOnline %}
+ <font color="green">The box is online!</font> 
+{% endif %}
+
+{% if not isOnline %}
+ <font color="red">The box is offline</font> 
+{% endif %}
+<br>
+
+
+
+<p> <a href="{% url 'getData:set_mouse_ID' box_nr %}" > Change the ID of the Mouse in this cage
+ </a> </p> 
+Current id is: {{mouse_ID}}
+<br>
+<br>
+<br>
+<p> <a href="/getData/{{box_nr}}/set_mouse_task/"> Change the task schedule for this cage </a> </p>
+The Current Task Schedule is:
+<br>
+<br>
+{% for task, duration, completed in task_names_and_durations %}
+	
+<li> Task: {{task}} , duration: {{duration}},
+<br> Completed: {{completed}}
+
+<br>
+<br>
+{% endfor %}
+<br>
+<br>
+
+Total scheduled run time is {{total_duration}}
+<br>
+<br>
+{{time_elapsed}} have elapsed
+<br>
+<br>
+<br>
+<p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
+ </a> </p> 

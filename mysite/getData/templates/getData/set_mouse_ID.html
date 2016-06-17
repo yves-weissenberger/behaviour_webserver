@@ -1,0 +1,5 @@
+<form action="{% url 'getData:write_mouse_ID' box_nr %}" method="post">
+{% csrf_token %}
+    Mouse ID in Cage {{box_nr}}: <input type="text" name="mouseID" "value=0" />
+		    <input type="submit" value="submit" />
+</form>

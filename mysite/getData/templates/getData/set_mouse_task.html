@@ -1,0 +1,13 @@
+
+<form action="{% url 'getData:set_mouse_task' box_nr %}" method="post"> 
+	{% csrf_token %}
+	  <select name="task_name">
+
+	    {% for task in taskList %}
+	    <option value={{task}}> {{task}} </option>
+	    {% endfor %}
+	  </select>
+	  <input type="submit" value="Run Task">
+	</form> 
+
+

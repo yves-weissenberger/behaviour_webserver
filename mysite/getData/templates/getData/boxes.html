@@ -1,0 +1,55 @@
+<h1> Here are a bunch of boxes </h1>
+
+
+<ul>
+
+
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: center;
+}
+</style>
+
+<body>
+<br>
+<br>
+<h2> Control Boxes and Update Info </h2>
+<table border="1" style="width:100%">
+
+  <tr>
+    <th>Cage Number</th>
+    <th>Mouse ID</th>
+    <th>Status</th>
+  </tr>
+
+{% for box, mouseID,isOnline in boxs_and_IDs %}
+	<tr>
+		<td><a href="/getData/{{box}}/"> Box Nr: {{box}} </a> </td>
+		<td> {{mouseID}}  </td>
+		{% if isOnline %}
+		<td>  <font color="green">online!</font>  </td>
+		{% endif %}
+
+		{% if not isOnline %}
+		<td>  <font color="red">offline</font>  </td>
+		{% endif %}
+ <br>
+	</tr>
+{% endfor %}
+
+</body>
+
+
+</ul>
+
+</table>
+
+<br>
+<br>
+<br>
+<a href="/getData/download_data/" > <h2> <font color="black" >Download Data Mouse_Wise </font> </h2>
