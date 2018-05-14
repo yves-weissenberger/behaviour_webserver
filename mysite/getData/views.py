@@ -23,7 +23,8 @@ import zipfile
 
 
 
-
+ROOT_path = '/Users/Yves/Desktop/dj_info/'
+#ROOT_path = '/home/rastamouse/Documents/Data/'
 
 
 
@@ -111,9 +112,10 @@ def set_mouse_ID(request,box_nr):
 	
 def write_mouse_ID(request,box_nr):
 
-	openstr = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
+	pth = os.path.join(ROOT_path,'mousecagemaps','box_' + str(box_nr))
+	#openstr = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
 
-	f = open(openstr,'w+b')
+	f = open(pth,'w+b')
 	f.write(str(request.POST['mouseID']))
 	f.close()
 	return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
@@ -139,9 +141,10 @@ def set_mouse_task(request,box_nr):
 				      shell=False, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
 		retrnTxt = p.stdout.readlines()
 		if (retrnTxt[0]=='hello world\n'):
-			openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
+			pth = os.path.join(ROOT_path,'cage_tasks','box_'+str(box_nr))
+			#openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
 
-			f = open(openstr,'w+b')
+			f = open(pth,'w+b')
 			task_schedule = str(request.POST['task_name'])
 			f.write(task_schedule)
 			f.close()
@@ -149,10 +152,10 @@ def set_mouse_task(request,box_nr):
 	
 
 def write_mouse_task(request,box_nr):
+	pth = os.path.join(ROOT_path,'mousecagemaps','box_' + str(box_nr))
+	#openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
 
-	openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
-
-	f = open(openstr,'w+b')
+	f = open(pth,'w+b')
 
 	task_schedule = str(  [ request.POST['task_name'], request.POST['duration']  ] )
 	f.write(task_schedule)
@@ -169,10 +172,27 @@ def set_num_boxes(request):
 
 	
 def write_num_boxes(request):
-	f = open('/home/rastamouse/Documents/Data/numboxes','w+b')
-	toWrite = 'number_of_boxes='+ str(request.POST['newNumBoxes'])
+	pth = os.path.join(ROOT_path,'numboxes.txt')
+	f = open(pth,'w+b')
+	new_N_boxes = request.POST['newNumBoxes']
+	toWrite = 'number_of_boxes='+ str(new_N_boxes)
 	f.write(toWrite)
 	f.close()
+	pth_mcm = os.path.join(ROOT_path,'mousecagemaps')
+	pth_cgT = os.path.join(ROOT_path,'cage_tasks')
+
+	nSet_cages = len(os.listdir(pth_mcm))
+	for i in range(nSet_cages,int(new_N_boxes)):
+		newF = os.path.join(pth_mcm,'box_'+str(i))
+		with open(newF, 'wb') as fi:
+			fi.write("None")
+
+		newF2 = os.path.join(pth_cgT,'box_'+str(i))
+		with open(newF2, 'wb') as fj:
+			fi.write("None")
+
+
+
 
 	return HttpResponseRedirect(reverse('getData:boxes'))
 
@@ -186,15 +206,18 @@ def get_PiData(request,box_nr):
 
 def write_PiData(request,box_nr):
 	
-	base_path = '/home/rastamouse/Documents/Data/'
+	base_path = ROOT_path#'/home/rastamouse/Documents/Data/'
 
 	#######
 	#box_nr = request.POST['box_nr']
-	openstr_MouseID = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
+	openstr_MouseID = os.path.join(ROOT_path,'mousecagemaps','box_'+str(box_nr))
+	#openstr_MouseID = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
 	f = open(openstr_MouseID,'r')
 	mouse_ID = f.read()
 	######
-	openstr_Task = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
+	openstr_Task = os.path.join(ROOT_path,'cage_tasks','box_'+str(box_nr))
+
+	#openstr_Task = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
 	f = open(openstr_Task,'r')
 	task_name = f.read()
 	########
@@ -231,8 +254,9 @@ def get_box_data(request,box_nr):
 
 def download_data(request):
 
+	base_filepath = os.path.join(ROOT_path,behaviour_data)
+	#base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/'
 
-	base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/'
 
 
 	if request.method == 'GET':
@@ -275,7 +299,8 @@ def download_data(request):
 
 def list_mousewise(request, mouse_ID):
 
-	base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/mousewise/'
+	base_filepath = os.path.join(ROOT_path,'behaviour_data','mousewise')
+	#base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/mousewise/'
 	mouseFiles = os.listdir(base_filepath + mouse_ID)
 	context = {'mouseFiles': mouseFiles,'mouse_ID': mouse_ID}
 	return render(request,'getData/list_mousewise.html',context)
@@ -283,8 +308,8 @@ def list_mousewise(request, mouse_ID):
 
 
 def download_mousewise(request, mouse_ID, fileName):
-
-	base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/mousewise/'
+	base_filepath = os.path.join(ROOT_path,'behaviour_data','mousewise')
+	#base_filepath = '/home/rastamouse/Documents/Data/behaviour_data/mousewise/'
 	filepath = base_filepath + mouse_ID + r'/' + fileName
 
 	response = HttpResponse(open(filepath))
@@ -327,9 +352,12 @@ def upload_new_task(request,box_nr,isOnline):
 
 #_______________________________________
 def get_num_boxes():
-	f = open('/home/rastamouse/Documents/Data/numboxes')
+	pth = os.path.join(ROOT_path,"numboxes.txt")
+	f = open(pth)
+	#print "HEEEELOOO", f.read()
+	#nb = int(re.findall(r'number_of_boxes=([0-9]+)',f.read())[0])
+	#print "))))))", nb
 	return int(re.findall(r'number_of_boxes=([0-9]+)',f.read())[0])
-
 
 
 #_________________________________________________________________________________________________________________
@@ -372,8 +400,9 @@ def time_parser(duration):
 
 #_________________________________________________________________________________________________________________
 def get_mouse_ID(box_nr):
+	openstr_MouseID = os.path.join(ROOT_path,'mousecagemaps', 'box_' + str(box_nr))
 
-	openstr_MouseID = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
+	#openstr_MouseID = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
 	
 	try:
 	
@@ -392,8 +421,9 @@ def get_mouse_ID(box_nr):
 
 #_________________________________________________________________________________________________________________
 def get_mouse_task_schedule(box_nr,piAccess=False):
+	openstr_Task = os.path.join(ROOT_path,'cage_tasks','box_'+str(box_nr))
 
-	openstr_Task = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
+	#openstr_Task = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
 	
 	try:
 	
