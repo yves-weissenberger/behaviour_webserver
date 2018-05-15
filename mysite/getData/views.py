@@ -21,9 +21,10 @@ import zipfile
 #________________________________________________________________________________________________________
 
 
+with open(os.path.join(os.path.split(os.path.split(__file__)[0])[0],"ROOT_dir.txt"),'r') as f:
+    ROOT_path = re.findall(r"ROOT_dir=(.*)",f.readline())[0]
 
-
-ROOT_path = '/Users/Yves/Desktop/dj_info/'
+#ROOT_path = os.path.split(os.path.split(__file__)[0])[0]
 #ROOT_path = '/home/rastamouse/Documents/Data/'
 
 
@@ -183,13 +184,14 @@ def write_num_boxes(request):
 
 	nSet_cages = len(os.listdir(pth_mcm))
 	for i in range(nSet_cages,int(new_N_boxes)):
+                print "number going now is", i
 		newF = os.path.join(pth_mcm,'box_'+str(i))
 		with open(newF, 'wb') as fi:
 			fi.write("None")
 
 		newF2 = os.path.join(pth_cgT,'box_'+str(i))
 		with open(newF2, 'wb') as fj:
-			fi.write("None")
+			fj.write("None")
 
 
 
