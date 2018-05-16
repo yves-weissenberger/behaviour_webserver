@@ -11,8 +11,8 @@
 		  <li> <a href="#home">Home</a> </li>
 		  <li><a href="#news">Go to box</a>
 		  	<ul class="submenu">
-		  		{% for box in boxs %}
-		  		<li><a  href="/getData/{{box}}/"> Box Nr: {{box}}</a></li>
+		  		{% for box_n in boxs %}
+		  		<li><a  href="/getData/{{box}}/"> Box Nr: {{box_n}}</a></li>
 		  		{% endfor %}
 
 		  	</ul>
@@ -75,7 +75,7 @@
 	</div>
   <div class="column right" id="right_col">
 
-	<video autoplay></video>
+	<video autoplay controls width=256 height=256 ></video>
 	<script src="{% static "getData/js/get_picam_stream.js" %}"></script>
 
 	</div>
