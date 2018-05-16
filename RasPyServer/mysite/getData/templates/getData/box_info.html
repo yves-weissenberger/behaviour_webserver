@@ -1,4 +1,7 @@
-{% load staticfiles %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'getData/video-js.min.css' %}" />
+
 
 
 
@@ -46,9 +49,40 @@ Total scheduled run time is {{total_duration}}
 <p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
  </a> </p> 
 
+<aside>
+	<video autoplay></video>
+	<script src="{% static "getData/js/get_picam_stream.js" %}"></script>
+</aside>
+<!--<video autoplay></video>
+<script src="{% static "getData/js/getUserMedia.js" %}"></script>
+-->
 
+
+<!--
  <video width="512" height="512" controls>
-  <source src="{% static "getData/OUT.mp4" %}" type="video/mp4">
+  <source src="{% static "getData/videoF/test.m3u8" %}">
 Your browser does not support the video tag.
 </video>
+
+<link href={% static "getData/node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
+
+<video id=example-video width=256 height=256 data_setup="{}" class="video-js vjs-default-skin" controls>
+  <source
+     src={% static "getData/videoF/test.m3u8" %}
+     type="application/x-mpegURL">
+</video>
+
+<script src="{% static "getData/node_modules/video.js/dist/video.min.js" %}"></script>
+<script src="{% static "getData/node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js" %}"></script>
+
+
+<script>
+var player = videojs('example-video',
+					{"preload": 'auto',
+					"controls": true,
+					autoplay: true
+					});
+player.play();
+</script>
+-->
 
