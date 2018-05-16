@@ -46,6 +46,10 @@ def boxes(request):
 
 
 def box_info(request, box_nr):
+ 	numBoxes = get_num_boxes()
+
+	box_connected = ping_boxes(numBoxes)
+	mouseIDs = [get_mouse_ID(box_nr) for box_nr in range(numBoxes)]
 
 	box_connected = ping_box(box_nr)
 	#box_connected = is_online=='True'
@@ -97,7 +101,8 @@ def box_info(request, box_nr):
 		   'task_names_and_durations': zip(tasks,duration_str,task_completions),
 		   'total_duration': total_dur,
 		   'time_elapsed': time_elapsed,
-		   'isOnline':box_connected}
+		   'isOnline':box_connected,
+		   'boxs':range(numBoxes)}
 
 
 	return render(request,'getData/box_info.html',context)
