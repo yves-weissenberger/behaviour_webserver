@@ -8,11 +8,11 @@
 
 <nav class="navigation">
 		<ul class="mainmenu">
-		  <li> <a href="#home">Home</a> </li>
+		  <li> <a href="/getData/">Home</a> </li>
 		  <li><a href="#news">Go to box</a>
 		  	<ul class="submenu">
 		  		{% for box_n in boxs %}
-		  		<li><a  href="/getData/{{box}}/"> Box Nr: {{box_n}}</a></li>
+		  		<li><a  href="/getData/{{box_n}}/"> Box Nr: {{box_n}}</a></li>
 		  		{% endfor %}
 
 		  	</ul>
