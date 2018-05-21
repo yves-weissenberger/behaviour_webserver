@@ -1,4 +1,4 @@
-"""mysite URL Configuration
+"""RasPyServer URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/1.8/topics/http/urls/
@@ -28,8 +28,8 @@ urlpatterns = [
     #The second argument is the view function that is called when there is a regex
     #match. Common third agument is just the name
 ######url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+    url('',include('getData.urls',namespace="getData")),  
     url(r'^getData/',include('getData.urls',namespace="getData")),   
-    url(r'^polls/', include('polls.urls',namespace="polls")),  
     #the namespace makes sure that search in polls subdirectories only
     url(r'^admin/', include(admin.site.urls)), 
 
