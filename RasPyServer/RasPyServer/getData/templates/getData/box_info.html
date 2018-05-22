@@ -1,116 +1,116 @@
 <!DOCTYPE html>
 
-{% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}" />
-
-<div class=row id="wrap">
-
-<nav class="navigation">
-		<ul class="mainmenu">
-		  <li> <a href="/getData/">Home</a> </li>
-		  <li><a href="#news">Go to box</a>
-		  	<ul class="submenu">
-		  		{% for box_n in boxs %}
-		  		<li><a  href="/getData/{{box_n}}/"> Box Nr: {{box_n}}</a></li>
-		  		{% endfor %}
-
-		  	</ul>
-		  </li>
-		  <li><a href="#contact">Mouse History</a></li>
-		  <li><a href="#about">About</a></li>
-		</ul>
-</nav>
+<head>
+    {% load static %}
+    <script type="text/javascript" src="{% static "getData/js/node_modules/chart.js/dist/Chart.js" %}"> </script>
+    <script type="text/javascript" src="{% static "getData/js/node_modules/smoothie/smoothie.js" %}"> </script>
+    <link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}" />
+</head>
 
 
-  <div class="column left">
+<body>
 
-		<h1> Box {{box_nr}} </h1>
 
-		<body>
-		{% if isOnline %}
-		 <font color="green">The box is online!</font> 
-		{% endif %}
-
-		{% if not isOnline %}
-		 <font color="red">The box is offline</font> 
-		{% endif %}
-		<br>
+    <div class=row id="wrap">
 
 
 
-		<p> <a href="{% url 'getData:set_mouse_ID' box_nr %}" > Change the ID of the Mouse in this cage
-		 </a> </p> 
-		Current id is: {{mouse_ID}}
-		<br>
-		<br>
-		<br>
-		<p> <a href="/getData/{{box_nr}}/set_mouse_task/"> Change the task schedule for this cage </a> </p>
-		The Current Task Schedule is:
-		<br>
-		<br>
-		{% for task, duration, completed in task_names_and_durations %}
-			
-		<li> Task: {{task}} , duration: {{duration}},</li>
-
-		<br> Completed: {{completed}}
-
-		<br>
-		<br>
-		{% endfor %}
-		<br>
-		<br>
-
-		Total scheduled run time is {{total_duration}}
-		<br>
-		<br>
-		{{time_elapsed}} have elapsed
-		<br>
-		<br>
-		<br>
-		<p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
-		 </a> </p> 
+        <nav class="navigation">
+                <ul class="mainmenu">
+                  <li> <a href="/getData/">Home</a> </li>
+                  <li><a href="#news">Go to box</a>
+                    <ul class="submenu">
+                        {% for box_n in boxs %}
+                        <li><a  href="/getData/{{box_n}}/"> Box Nr: {{box_n}}</a></li>
+                        {% endfor %}
+                    </ul>
+                  </li>
+                  <li><a href="#contact">Mouse History</a></li>
+                  <li><a href="#about">About</a></li>
+                </ul>
+        </nav>
 
 
-	</div>
-  <div class="column right" id="right_col">
+          <div class="column left">
 
-	<video autoplay controls width=256 height=256 ></video>
-	<script src="{% static "getData/js/get_picam_stream.js" %}"></script>
+                <div id="control_box">
 
-	</div>
-</div>
+                
+                <h1> Box {{box_nr}} </h1>
+
+
+                {% if isOnline %}
+                    <font color="green">The box is online!</font> 
+                {% endif %}
+
+                {% if not isOnline %}
+                    <font color="red">The box is offline</font> 
+                {% endif %}
+
+
+
+                <p> <a href="{% url 'getData:set_mouse_ID' box_nr %}" > Change the ID of the Mouse in this cage
+                 </a> </p> 
+                Current id is: {{mouse_ID}}
+                <br>
+                <p> <a href="/getData/{{box_nr}}/set_mouse_task/"> Change the task schedule for this cage </a> </p>
+                The Current Task Schedule is:
+                <br>
+                {% for task, duration, completed in task_names_and_durations %}
+                    
+                <li> Task: {{task}} , duration: {{duration}},</li>
+
+                <br> Completed: {{completed}}
+
+                <br>
+                <br>
+                {% endfor %}
+
+                Total scheduled run time is {{total_duration}}
+                {{time_elapsed}} have elapsed
+                <p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
+                 </a> </p> 
+
+                </div>
+
+
+            </div>
+        <div class="column middle" id="right_col">
+            <p class="hidden" id="sendInt"> </p>
+            <p class="hidden" id="stTime"> </p>
+
+
+            <video autoplay controls width=256 height=256 ></video>
+            <script src="{% static "getData/js/get_picam_stream.js" %}"></script>
+        </div>
+
+        <div class= "column right">
+                <h1> Data </h1>
+                <input type="file" name="file" id="file">
+                
+                <div style="height: 300px; width: 300px">
+                    <canvas id="myChart" width="200" height="200"></canvas>
+                </div>
+        </div>
+                
+
+
+        <div id="wrapper2">
+            <div id="leftcolumn">
+                <ul id="legend">
+                </ul>
+            </div>
+
+            <div id="rightcolumn">
+                <div style="height: 150px; width: 600px">
+                    <canvas id="myChart_smooth" width="600" height="150"></canvas>
+                </div>
+            </div>
+
+         <script src="{% static "getData/js/read_data.js" %}">   </script>
+        </div>
+
+        </div>
+    </div>
 </body>
-<!--<video autoplay></video>
-<script src="{% static "getData/js/getUserMedia.js" %}"></script>
--->
-
-
-<!--
- <video width="512" height="512" controls>
-  <source src="{% static "getData/videoF/test.m3u8" %}">
-Your browser does not support the video tag.
-</video>
-
-<link href={% static "getData/node_modules/video.js/dist/video-js.min.css" rel="stylesheet">
-
-<video id=example-video width=256 height=256 data_setup="{}" class="video-js vjs-default-skin" controls>
-  <source
-     src={% static "getData/videoF/test.m3u8" %}
-     type="application/x-mpegURL">
-</video>
-
-<script src="{% static "getData/node_modules/video.js/dist/video.min.js" %}"></script>
-<script src="{% static "getData/node_modules/videojs-contrib-hls/dist/videojs-contrib-hls.min.js" %}"></script>
-
-
-<script>
-var player = videojs('example-video',
-					{"preload": 'auto',
-					"controls": true,
-					autoplay: true
-					});
-player.play();
-</script>
--->
-
