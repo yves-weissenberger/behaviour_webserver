@@ -87,6 +87,8 @@
 
         <div class= "column right">
                 <h1> Data </h1>
+                <h2 id="p1t"> text </h2>
+
                 <input type="file" name="file" id="file">
                 
                 <div style="height: 300px; width: 300px">
@@ -97,18 +99,31 @@
 
 
         <div id="wrapper2">
+
             <div id="leftcolumn">
-                <ul id="legend">
+                <ul class="graph_li" id="legend">
                 </ul>
             </div>
 
-            <div id="rightcolumn">
+            <div id="middlecolumn">
+
                 <div style="height: 150px; width: 600px">
                     <canvas id="myChart_smooth" width="600" height="150"></canvas>
                 </div>
             </div>
 
-         <script src="{% static "getData/js/read_data.js" %}">   </script>
+            <div id="rightcolumn">
+
+                <ul class="graph_li" id="event_info">
+                </ul>
+            </div>
+
+        <script>
+                 var Dtemp = " {{  dataStr }} "
+         </script> 
+
+         <script src="{% static "getData/js/read_data.js" %}">  
+          </script>
         </div>
 
         </div>

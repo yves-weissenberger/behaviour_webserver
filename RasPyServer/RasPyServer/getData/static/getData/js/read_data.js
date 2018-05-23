@@ -22,6 +22,18 @@ document.getElementById('file').onchange = function readDoc(){
                    "#fdb462",
                    "#b3de69"]
 
+  var diverging_palette1 = ["#9e0142",
+                            "#d53e4f",
+                            "#f46d43",
+                            "#fdae61",
+                            "#fee08b",
+                            "#ffffbf",
+                            "#e6f598",
+                            "#abdda4",
+                            "#66c2a5",
+                            "#3288bd",
+                            "#5e4fa2"]
+
   cTime = 10000000;
 
   smoothie.streamTo(document.getElementById("myChart_smooth"));
@@ -34,17 +46,23 @@ document.getElementById('file').onchange = function readDoc(){
     // By lines
     var lines = this.result.split('\n');
 
+
     var var_list = get_vars(lines);
     var nice_txt_regex =  RegExp("(.*)List", '')
     //document.getElementById("p2").innerHTML = cServer_Time;
     if (LOOP_counter === 1) {
 
         var ul = document.getElementById("legend");
+
         for( var i = (var_list.length-2); i > -1 ; i-- ) { 
             varN = var_list[i].match(nice_txt_regex);
             var li = document.createElement("li");
+
             li.appendChild(document.createTextNode(varN[1]+'s'));
-            ul.appendChild(li);     
+
+            //li.appendChild(document.createTextNode(Dtemp ));
+
+            ul.appendChild(li);
         } 
 
 
@@ -58,17 +76,39 @@ document.getElementById('file').onchange = function readDoc(){
     event_times = out[0];
     event_counters = out[1];
     event_types = out[2]
+
+    var unique_events = [];
+
+    var ul2 = document.getElementById("event_info");
+    if (LOOP_counter === 1) {
+        for ( var i = (var_list.length-2); i > -1 ; i-- ) { 
+
+        uniq = event_types[i].filter(get_unique);
+        var li2 = document.createElement("li");
+        for (var j=0; j<uniq.length; j++){
+            div = document.createElement("div");
+            div.innerHTML = uniq[j]
+            div.style.backgroundColor = diverging_palette1[j]
+            li2.appendChild(div);
+        }
+        ul2.appendChild(li2);     
+
+
+
+
+
+      }
+    }
+
+
+
     send_interval = event_times[event_times.length-1][0]
     startT2 = event_times[event_times.length-1].slice(-1) - send_interval
     document.getElementById("sendInt").innerHTML = send_interval
     document.getElementById("stTime").innerHTML = startT2
-    //document.getElementById("p1").innerHTML = event_types
 
 
-    //document.getElementById("name").innerHTML = Number(startT)+(LOOP_counter*100)/1000
-
-
-
+    // Here do the plotting for stuff
     for (var evCt=0; evCt<(var_list.length-1); evCt++){
         evTs = event_times[evCt]
         if (evTs.some(in_bounds,thisArg=[Number(startT)+(LOOP_counter*100)/1000,Number(startT)+((LOOP_counter+1)*100)/1000]))
@@ -96,6 +136,8 @@ document.getElementById('file').onchange = function readDoc(){
     document.getElementById("sendInt").innerHTML = "SO FAR"
 
     reader.readAsText(file)
+    document.getElementById("p1t").innerHTML = Dtemp
+
 //    document.getElementById("p2").innerHTML = dat
     //document.getElementById("name").innerHTML = sendTimes[sendTimes.length-1]
 
@@ -147,6 +189,10 @@ function isBigEnough(value) {
     return function(element, index, array) {
         return (element >= value);
     }
+}
+
+function get_unique(value, index, self) { 
+    return self.indexOf(value) === index;
 }
 
 function proc_file(lines){

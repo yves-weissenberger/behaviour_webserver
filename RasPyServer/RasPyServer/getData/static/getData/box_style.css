@@ -1,25 +1,42 @@
+li a {
+    color: #252525;
+}
 
 h1 {
     color: #252525;
 }
 
+#sendInt {
+  display: none;
+}
 
+#stTime {
+  display: none;
+}
+
+.graph_li {
+    list-style-type: none; /*to remove bullets*/
+    text-align: left;
+    margin: 0 auto;
+    padding: 0px;
+    display:flex;
+    height: 150px;
+    flex-direction: column;
+    color: black;
+
+}
+
+li{
+    float: right;
+    padding: 2px;
+    width: 150px;
+    margin-top: auto ;
+    margin-bottom: auto ;
+}
 
 h2 {
     color: #252525;
 }
-
-
-ul {
-    margin: 0;
-    padding: 0;
-    background-color: #f1f1f1;
-    height: 100%; /* Full height */
-    position: fixed; /* Make it stick, even on scroll */
-    /* overflow: auto; Enable scrolling if the sidenav has too much content */
-
-}
-
 
 body {
   background-color: white;
@@ -30,6 +47,19 @@ body {
   color: #333;
   padding: 1em;
 }
+
+/*
+ ul {
+    margin: 0;
+    padding: 0;
+    width: 20%;
+    background-color: #f1f1f1;
+    height: 100%; 
+    position: fixed; 
+    overflow: auto; Enable scrolling if the sidenav has too much content 
+
+}
+*/
 
 .column {
     float: left;
@@ -43,21 +73,20 @@ body {
 
 .middle {
     width: 25%;
+    margin-top: 10%
 }
-
 
 .right {
     width: 25%;
+    margin-top: 10%
 }
-
-
 
 
 
 /* define a fixed width for the entire menu */
 
 .navigation {
-  min-width: 20%;
+  min-width: 300px;
 }
 /* reset our lists to remove bullet points and padding */
 
@@ -66,7 +95,6 @@ body {
   list-style: none;
   padding: 0;
   margin: 0;
-
 }
 /* make ALL links (main and submenu) have padding and background color */
 
@@ -91,7 +119,6 @@ body {
   display: block;
   min-height: 200px;
   height: auto;
-
 }
 /*
       we now overwrite the background-color for .submenu links only.
@@ -100,13 +127,11 @@ body {
 
 .submenu a {
   background-color: #999;
-
 }
 /* hover behaviour for links inside .submenu */
 
 .submenu a:hover {
   background-color: #666;
-
 }
 /* this is the initial state of all submenus.
       we set it to max-height: 0, and hide the overflowed content.
@@ -116,23 +141,17 @@ body {
   overflow: hidden;
   max-height: 0;
   -webkit-transition: all 0.5s ease-out;
-  overflow: auto; /*Enable scrolling if the sidenav has too much content */
-
 }
 
+/* 
+  This is the css code that is used for the animations
+    */
 
-
-
-
-/*
-/*
-*/
-
-#wrapper2 {
+  #wrapper2 {
        width: 1005px;
        margin: 0 auto;
   }
-  #leftcolumn, #rightcolumn {
+  #leftcolumn, #middlecolumn, #rightcolumn {
       float: left;
       height: 150px;
       color: white;
@@ -140,33 +159,14 @@ body {
   #leftcolumn {
        width: 100px;
   }
-  #rightcolumn {
+  #middlecolumn {
        width: 600px;
   }
 
-ul {
-    list-style-type: none; /*to remove bullets*/
-    text-align: left;
-    margin: 0 auto;
-    padding: 0px;
-    display:flex;
-    height: 150px;
-    flex-direction: column;
-    color: black;
+  #rightcolumn {
+       width: 100px;
+  }
 
-}
-li{
-    float: left;
-    padding: 2px;
-    width: 150px;
-    margin-top: auto ;
-    margin-bottom: auto ;
-}
 
-#sendInt {
-  display: none;
-}
 
-#stTime {
-  display: none;
-}
+
