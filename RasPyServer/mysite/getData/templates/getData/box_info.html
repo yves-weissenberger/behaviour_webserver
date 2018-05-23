@@ -36,6 +36,12 @@
 
                 <div id="control_box">
 
+                <p id="testp"> This is a test </p>
+                <p id="testp1"> "{% static "getData/ims/IMG_0170.jpg" %}" </p>
+                <p id="testp2"> Testp2 </p>
+
+                <img id="testim" src="{% static "getData/ims/IMG_0170.jpg" %}" height=200, width=200> </img>
+
                 
                 <h1> Box {{box_nr}} </h1>
 
@@ -81,8 +87,9 @@
             <p class="hidden" id="stTime"> </p>
 
 
-            <video autoplay controls width=256 height=256 ></video>
+<!--           <video autoplay controls width=256 height=256 ></video>
             <script src="{% static "getData/js/get_picam_stream.js" %}"></script>
+            -->
         </div>
 
         <div class= "column right">
@@ -106,9 +113,44 @@
             </div>
 
             <div id="middlecolumn">
-
                 <div style="height: 150px; width: 600px">
                     <canvas id="myChart_smooth" width="600" height="150"></canvas>
+
+                    <script>    
+                        var chatSocket = new WebSocket(
+                        'ws://' + window.location.host +
+                        '/ws/getData/' + "{{box_nr}}" + '/');
+
+                        var counter = 0;
+                        document.getElementById("testp").innerHTML = 0
+
+                        setInterval(function() {
+                            var txt1 = document.getElementById("testp").innerHTML
+                            chatSocket.send(JSON.stringify({'message': txt1}))
+                        }, 200 );
+
+                                    {% load static %}
+
+
+
+
+                         chatSocket.onmessage = function(e) {
+                                var data = JSON.parse(e.data);
+                                var message = data['message'];
+                                document.getElementById("testp").innerHTML = data['message'];
+                                var img_str = data['img_loc']
+                                document.getElementById("testp2").innerHTML = "{% get_static_prefix %}ims/" + img_str
+                                document.getElementById('testim').src = "{% get_static_prefix %}/getData/ims/" + img_str
+                            };
+
+
+                        chatSocket.onclose = function(e) {
+                        console.error('Chat socket closed unexpectedly');
+                    }
+
+
+                    </script>
+
                 </div>
             </div>
 

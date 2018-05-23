@@ -1,0 +1,5 @@
+<form action="{% url 'getData:write_pi_ims' box_nr %}" method="post"> 
+{% csrf_token %}
+	 <input type="file" name="piData" "value=None" />
+	 <input type="submit" value="send">
+</form> 

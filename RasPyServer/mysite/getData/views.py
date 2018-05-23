@@ -13,6 +13,9 @@ from django.contrib.auth.decorators import login_required
 #________________
 from django.utils.timezone import utc
 import datetime
+from django.utils.safestring import mark_safe
+import json
+
 
 
 #________________
@@ -215,6 +218,38 @@ def write_num_boxes(request):
     return HttpResponseRedirect(reverse('getData:boxes'))
 
 #________________________________________________________________________________________________________
+
+
+def get_pi_ims(request,box_nr):
+    context = {'box_nr': box_nr}
+    return render(request,'getData/store_images_form.html',context)
+
+def write_pi_ims(request,box_nr):
+
+    base_path = ROOT_path
+
+    data = request.FILES
+    print(data.keys())
+    path = "/Users/Yves/Desktop/"
+    if not os.path.isdir(path):
+        mkdir_p(path)
+    else:
+        pass
+
+    save_pth = '/Users/Yves/Documents/Code/behaviour_webserver/RasPyServer/mysite/getData/static/getData/ims/'
+
+    with open(save_pth+ str(len(os.listdir(save_pth))) + '.jpg','wb') as f:
+        for chunk in data['im.jpeg']:
+            f.write(chunk)
+        #f.write(data['im.jpeg'])
+
+
+
+    return  HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
+
+
+#________________________________________________________________________________________________________
+
 
 def get_PiData(request,box_nr):
     context = {'box_nr': box_nr}

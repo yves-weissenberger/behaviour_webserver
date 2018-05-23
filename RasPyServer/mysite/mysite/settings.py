@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#DATA_UPLOAD_MAX_NUMBER_FIELDS = 1e2
+
 
 # Application definition
 
@@ -107,4 +109,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = '/getData/static/getData/'

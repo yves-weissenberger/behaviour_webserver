@@ -1,3 +1,5 @@
 .DS_STore
 *.pyc
 *.html~
+*.jpg
+*.JPG
