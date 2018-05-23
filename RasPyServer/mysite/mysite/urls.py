@@ -20,18 +20,27 @@ Including another URLconf
 
 from django.conf.urls import include, url
 from django.contrib import admin
+import sys
 
-urlpatterns = [
-    #each URL pattern has 2 or more arguments. The first argument is a regex
-    #django starts at the first regular expression and makes its way down this
-    #list looking for matches to the requested site by the browser
-    #The second argument is the view function that is called when there is a regex
-    #match. Common third agument is just the name
-######url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-    url('',include('getData.urls',namespace="getData")),  
-    url(r'^getData/',include('getData.urls',namespace="getData")),   
-    #the namespace makes sure that search in polls subdirectories only
-    url(r'^admin/', include(admin.site.urls)), 
 
-#the include function basically appends other, specified url.py files
-]
+
+if sys.version_info[0] < 3:
+
+    urlpatterns = [
+        url('',include('getData.urls',namespace="getData")),  
+        url(r'^getData/',include('getData.urls',namespace="getData")),   
+        #the namespace makes sure that search in polls subdirectories only
+        url(r'^admin/', include(admin.site.urls)), 
+
+    ]
+else:
+
+        urlpatterns = [
+        url('',include(('getData.urls','getDdata'),namespace="getData")),  
+        url(r'^getData/',include(('getData.urls','getDdata'),namespace="getData")),   
+        #the namespace makes sure that search in polls subdirectories only
+        url(r'^admin/', include(('getData.urls','getDdata'),namespace="getData")), 
+
+    #the include function basically appends other, specified url.py files
+    ]
+

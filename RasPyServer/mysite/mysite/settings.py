@@ -38,6 +38,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'getData',
+    'channels',
+
 )
 
 MIDDLEWARE_CLASSES = (
@@ -51,7 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
-ROOT_URLCONF = 'RasPyServer.urls'
+ROOT_URLCONF = 'mysite.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +71,12 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'RasPyServer.wsgi.application'
+WSGI_APPLICATION = 'mysite.wsgi.application'
+
+# mysite/settings.py
+# Channels
+ASGI_APPLICATION = 'mysite.routing.application'
+
 
 
 # Database
