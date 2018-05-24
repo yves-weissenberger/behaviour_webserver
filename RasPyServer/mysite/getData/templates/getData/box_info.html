@@ -121,13 +121,17 @@
                         'ws://' + window.location.host +
                         '/ws/getData/' + "{{box_nr}}" + '/');
 
+                        //var videoSocket = new WebSocket(
+                        //'ws://' + window.location.host +
+                        //'/ws/getData/' + "{{box_nr}}" + '/getPi_vid');
+
                         var counter = 0;
                         document.getElementById("testp").innerHTML = 0
 
-                        //setInterval(function() {
+                        setInterval(function() {
                             var txt1 = document.getElementById("testp").innerHTML
                             chatSocket.send(JSON.stringify({'message': txt1}))
-                        //}, 200 );
+                        }, 50 );
 
                                     {% load static %}
 
