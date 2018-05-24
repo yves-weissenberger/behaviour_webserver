@@ -124,10 +124,10 @@
                         var counter = 0;
                         document.getElementById("testp").innerHTML = 0
 
-                        setInterval(function() {
+                        //setInterval(function() {
                             var txt1 = document.getElementById("testp").innerHTML
                             chatSocket.send(JSON.stringify({'message': txt1}))
-                        }, 200 );
+                        //}, 200 );
 
                                     {% load static %}
 
