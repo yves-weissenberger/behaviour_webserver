@@ -115,7 +115,7 @@ def box_info(request, box_nr):
            'time_elapsed': time_elapsed,
            'isOnline':box_connected,
            'boxs':range(numBoxes),
-           'dataStr': '/Users/Yves/Documents/Code/chart_js_test/behaviour.txt'}
+           'dataStr': ''}
 
 
     return render(request,'getData/box_info.html',context)
@@ -192,7 +192,7 @@ def set_num_boxes(request):
     
 def write_num_boxes(request):
     pth = os.path.join(ROOT_path,'numboxes.txt')
-    f = open(pth,'w+b')
+    f = open(pth,'w')
     new_N_boxes = request.POST['newNumBoxes']
     toWrite = 'number_of_boxes='+ str(new_N_boxes)
     f.write(toWrite)
@@ -205,11 +205,11 @@ def write_num_boxes(request):
 
         print("number going now is", i)
         newF = os.path.join(pth_mcm,'box_'+str(i))
-        with open(newF, 'wb') as fi:
+        with open(newF, 'w') as fi:
             fi.write("None")
 
         newF2 = os.path.join(pth_cgT,'box_'+str(i))
-        with open(newF2, 'wb') as fj:
+        with open(newF2, 'w') as fj:
             fj.write("None")
 
 
@@ -230,18 +230,29 @@ def write_pi_ims(request,box_nr):
 
     data = request.FILES
     print(data.keys())
-    path = "/Users/Yves/Desktop/"
-    if not os.path.isdir(path):
-        mkdir_p(path)
+    #path = "/Users/Yves/Desktop/"
+    #if not os.path.isdir(path):
+    #    mkdir_p(path)
+    #else:
+    #    pass    
+    save_pth = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims/'
+    print (len(list(data.keys())))
+    if len(data.keys())==1:
+
+        with open(save_pth+ str(len(os.listdir(save_pth))) + '.jpg','wb') as f:
+            for chunk in data[list(data.keys())[0]]:
+                f.write(chunk)
+            #f.write(data['im.jpeg'])
+
     else:
-        pass
+        for k in list(data.keys()):
 
-    save_pth = '/Users/Yves/Documents/Code/behaviour_webserver/RasPyServer/mysite/getData/static/getData/ims/'
+            with open(save_pth + k + '.jpg','wb') as f:
+                for chunk in data[k]:
+                    f.write(chunk)
+        
 
-    with open(save_pth+ str(len(os.listdir(save_pth))) + '.jpg','wb') as f:
-        for chunk in data['im.jpeg']:
-            f.write(chunk)
-        #f.write(data['im.jpeg'])
+
 
 
 
@@ -515,7 +526,7 @@ def ping_box(box_nr):
     base_addr = '192.168.0.' 
     box_addr = base_addr + str(100 + int(box_nr))
 
-    cmd = ['fping','-rn 1','-t 300',box_addr]
+    cmd = ['fping','-r n 1','-t 300',box_addr]
 
     try:
         a = subprocess.check_output(cmd)
