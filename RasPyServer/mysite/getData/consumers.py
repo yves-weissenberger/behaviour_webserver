@@ -16,7 +16,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
 
-        imgF = '/Users/Yves/Documents/Code/behaviour_webserver/RasPyServer/mysite/getData/static/getData/ims/'
+        imgF = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims/'
         fs = [i for i in os.listdir(imgF) if 'j' in i]
         image_store = sorted(fs,key = lambda x: int(re.findall(r"^([0-9]+).*",x)[0]))
         text_data_json = json.loads(text_data)
