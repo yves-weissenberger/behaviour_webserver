@@ -108,5 +108,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
-
 STATIC_URL = '/getData/static/getData/'
+MEDIA_ROOT="/Users/Yves/Desktop/serer-folds5/media/"
+MEDIA_URL="/media/"

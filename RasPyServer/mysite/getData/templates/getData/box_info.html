@@ -1,10 +1,13 @@
 <!DOCTYPE html>
+{% load static %}
 
 
 <head>
     {% load static %}
     <script type="text/javascript" src="{% static "getData/js/node_modules/chart.js/dist/Chart.js" %}"> </script>
     <script type="text/javascript" src="{% static "getData/js/node_modules/smoothie/smoothie.js" %}"> </script>
+    <script type="text/javascript" src="{% static "getData/js/node_modules/jquery/dist/jquery.min.js" %}"> </script>
+
     <link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}" />
 </head>
 
@@ -13,7 +16,30 @@
 
 
     <div class=row id="wrap">
+    
+    <button id="view_video">  View </button>
+    <button id="save_video">  Save Video</button>
 
+    <script type="text/javascript">
+        $(document).ready( function() {
+            //alert("You clicked the button using JQuery!");
+
+            $("#view_video").click( function() {   
+                    
+                    $.post("/getData/{{box_nr}}/start_video/",
+                        {click: "this is a string"},
+                        function (data) {
+                            
+                            //alert("You clicked the button using JQuery!");
+
+                            // success callback
+                            // you can process data returned by function from views.py
+                        }
+                    );
+                });
+        
+        });
+    </script>
 
 
         <nav class="navigation">
@@ -130,10 +156,10 @@
 
                         setInterval(function() {
                             var txt1 = document.getElementById("testp").innerHTML
-                            chatSocket.send(JSON.stringify({'message': txt1}))
+                            chatSocket.send(JSON.stringify({'message': txt1,
+                                                            'box_ID': "{{box_nr}}"}))
                         }, 50 );
 
-                                    {% load static %}
 
 
 
@@ -143,8 +169,8 @@
                                 var message = data['message'];
                                 document.getElementById("testp").innerHTML = data['message'];
                                 var img_str = data['img_loc']
-                                document.getElementById("testp2").innerHTML = "{% get_static_prefix %}ims/" + img_str
-                                document.getElementById('testim').src = "{% get_static_prefix %}/getData/ims/" + img_str
+                                document.getElementById("testp2").innerHTML = "{% get_media_prefix %}" + img_str
+                                document.getElementById('testim').src = "{% get_media_prefix %}" +"box_" + "{{box_nr}}" +'/' + img_str
                             };
 
 

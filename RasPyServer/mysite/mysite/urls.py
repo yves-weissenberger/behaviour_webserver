@@ -21,7 +21,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 import sys
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 if sys.version_info[0] < 3:
@@ -42,5 +43,5 @@ else:
         url(r'^admin/', include(('getData.urls','getDdata'),namespace="getData")), 
 
     #the include function basically appends other, specified url.py files
-    ]
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

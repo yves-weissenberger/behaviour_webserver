@@ -15,7 +15,8 @@ from django.utils.timezone import utc
 import datetime
 from django.utils.safestring import mark_safe
 import json
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 
 #________________
@@ -28,6 +29,8 @@ import subprocess
 from multiprocessing.dummy import Pool
 import zipfile
 import json
+import subprocess
+import pathlib
 
 
 #________________________________________________________________________________________________________
@@ -39,6 +42,19 @@ with open(os.path.join(os.path.split(os.path.split(__file__)[0])[0],"ROOT_dir.tx
 #ROOT_path = os.path.split(os.path.split(__file__)[0])[0]
 #ROOT_path = '/home/rastamouse/Documents/Data/'
 
+def start_video_server(request,box_nr):
+
+    """ Opens a python process running a socket server if request is to start this. Otherwise kills it
+        Also saves the pid of the python process to text file for later working with"""
+    root_dir = os.path.split(os.path.split(settings.MEDIA_ROOT)[0])[0]
+    script_pth = os.path.join(root_dir,'socket_server',"run_socket_server.py")
+    sp = subprocess.Popen('python ' + script_pth,shell=1)
+    print (sp.pid)
+    #print (os.path.split(os.path.split(settings.MEDIA_ROOT)[0]))
+    return HttpResponse("Text")
+
+def stop_video_server(request):
+    return None
 
 
 def boxes(request):
@@ -199,6 +215,7 @@ def write_num_boxes(request):
     f.close()
     pth_mcm = os.path.join(ROOT_path,'mousecagemaps')
     pth_cgT = os.path.join(ROOT_path,'cage_tasks')
+    pth_media = os.path.join(ROOT_path,'media')
 
     nSet_cages = len(os.listdir(pth_mcm))
     for i in range(nSet_cages,int(new_N_boxes)):
@@ -211,6 +228,12 @@ def write_num_boxes(request):
         newF2 = os.path.join(pth_cgT,'box_'+str(i))
         with open(newF2, 'w') as fj:
             fj.write("None")
+
+        newD1 = os.path.join(pth_media,'box_'+str(i))
+        os.mkdir(newD1)
+        #with open(newF2, 'w') as fj:
+        #    fj.write("None")
+
 
 
 
@@ -229,14 +252,14 @@ def write_pi_ims(request,box_nr):
     base_path = ROOT_path
 
     data = request.FILES
-    print(data.keys())
+    #print(data.keys())
     #path = "/Users/Yves/Desktop/"
     #if not os.path.isdir(path):
     #    mkdir_p(path)
     #else:
     #    pass    
     save_pth = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims/'
-    print (len(list(data.keys())))
+    #print (len(list(data.keys())))
     if len(data.keys())==1:
 
         with open(save_pth+ str(len(os.listdir(save_pth))) + '.jpg','wb') as f:
