@@ -51,6 +51,7 @@ def start_video_server(request,box_nr):
     script_pth = os.path.join(root_dir,'socket-server',"video_server.py")
     sp = subprocess.Popen(['python', script_pth,str(box_nr)],shell=0)
     print (sp.pid)
+    sp_remote = subprocess.Popen(["ssh","pi@192.168.0."+str(100+int(box_nr)),"python ~/socket_video/video_provider.py"])
     #print (os.path.split(os.path.split(settings.MEDIA_ROOT)[0]))
     return HttpResponse("Text")
 

@@ -2,17 +2,22 @@ import io
 import socket
 import struct
 from PIL import Image
+import sys
 import time
 import os
 # Start a socket listening for connections on 0.0.0.0:8000 (0.0.0.0 means
 # all interfaces)
+
+boxNr = sys.argv[1]
 server_socket = socket.socket()
-server_socket.bind(('0.0.0.0', 8001))
+server_socket.bind(('0.0.0.0', 8000+int(boxNr)))
 server_socket.listen(0)
 
 # Accept a single connection and make a file-like object out of it
 connection = server_socket.accept()[0].makefile('rb')
-base_save = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims'
+base = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
+base_save = os.path.join(base,'media','box_8')
+#base_save = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims'
 try:
     st = time.time() 
     nIms = 0 
@@ -35,8 +40,8 @@ try:
         image.save(os.path.join(base_save,str(nIms))+".jpg",format='jpeg')
         #print('Image is verified')
         nIms += 1
-        print("n: %s" %nIms)
-        print("t: %s" %(time.time() - st))
+        #print("n: %s" %nIms)
+        #print("t: %s" %(time.time() - st))
 finally:
     connection.close()
     server_socket.close()

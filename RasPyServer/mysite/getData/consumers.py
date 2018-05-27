@@ -23,30 +23,33 @@ class ChatConsumer(AsyncWebsocketConsumer):
         imgF = os.path.join(settings.MEDIA_ROOT,'box_'+str(box_nr))
         #print(imgF)
         fs = [i for i in os.listdir(imgF) if 'j' in i]
-        image_store = sorted(fs,key = lambda x: int(re.findall(r".*([0-9]+).*",x)[0]))
+        image_store = sorted(fs,key = lambda x: int(re.findall(r".*(^[0-9]+).*",x)[0]))
         nIms = len(image_store)
         previous_image = text_data_json['message']
         cIm = text_data_json['message']
         if len(image_store)>0:
 
-            if image_store[-1] != previous_image:
-                #os.remove(os.path.join(imgF,previous_image))
-                #subprocess.run(["rm", os.path.join(imgF,previous_image)], shell=1)
+            if (int(cIm)+2)<nIms:
 
-                message = (int(text_data_json['message']) + 1) % 60
+                if image_store[-1] != previous_image:
 
-                #if (message-nIms)>10:
-                #    message = nIms - 5
+                    #os.remove(os.path.join(imgF,previous_image))
+                    #subprocess.run(["rm", os.path.join(imgF,previous_image)], shell=1)
 
-                img_loc = image_store[message]
-                #print(img_loc)
+                    message = (int(text_data_json['message']) + 1)
 
-                await self.send(text_data=json.dumps({
-                    'message': message,
-                    'img_loc': img_loc
-                }))
-                self.previous_image=img_loc
-            else:
-                pass
+                    if (nIms-message)>20:
+                        message = nIms - 10
+
+                    img_loc = image_store[message]
+                    #print(img_loc)
+
+                    await self.send(text_data=json.dumps({
+                        'message': message,
+                        'img_loc': img_loc
+                    }))
+                    self.previous_image=img_loc
+                else:
+                    pass
         else:
             pass

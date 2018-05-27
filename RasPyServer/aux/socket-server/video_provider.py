@@ -3,6 +3,25 @@ import socket
 import struct
 import time
 import picamera
+import fcntl
+
+def get_ip_address(ifname):
+    """ Function from 
+        https://stackoverflow.com/questions/24196932/how-can-i-get-the-ip-address-of-eth0-in-python
+        """
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    return socket.inet_ntoa(fcntl.ioctl(
+        s.fileno(),
+        0x8915,  # SIOCGIFADDR
+        struct.pack('256s', ifname[:15])
+    )[20:24])
+
+
+
+
+piIp = get_ip_address('wlan0')
+piId = str(int(piIp[-3:])-100)
+
 
 class SplitFrames(object):
     def __init__(self, connection):
@@ -25,15 +44,15 @@ class SplitFrames(object):
         self.stream.write(buf)
 
 client_socket = socket.socket()
-client_socket.connect(('192.168.0.38', 8001))
+client_socket.connect(('192.168.0.38', 8000+int(piId)))
 connection = client_socket.makefile('wb')
 try:
     output = SplitFrames(connection)
-    with picamera.PiCamera(resolution=(480,480), framerate=30) as camera:
+    with picamera.PiCamera(resolution=(480,480), framerate=15) as camera:
         time.sleep(2)
         start = time.time()
         camera.start_recording(output, format='mjpeg')
-        camera.wait_recording(30)
+        camera.wait_recording(90)
         camera.stop_recording()
         # Write the terminating 0-length to the connection to let the
         # server know we're done
