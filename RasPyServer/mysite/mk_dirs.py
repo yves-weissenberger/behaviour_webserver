@@ -1,5 +1,6 @@
 import os
 import sys
+from shutil import copyfile
 
 if __name__=='__main__':
 
@@ -21,8 +22,12 @@ if __name__=='__main__':
     os.mkdir(os.path.join(path,'cage_tasks'))
     os.mkdir(os.path.join(path,'mousecagemaps'))
     os.mkdir(os.path.join(path,'media'))
-    os.mkdir(os.path.join(path,'socket_server'))
-    os.mkdir(os.path.join(path,'socket_server','box_video_info'))
+    os.mkdir(os.path.join(path,'socket-server'))
+    vid_server_py = os.path.join(os.path.split(proj_dir)[0],'aux','socket-server',"video_server.py")
+    #vid_server_py = os.path.join(os.path.split(proj_dir)[0],'aux','socket_server',"vid_server.py")
+    copyfile(vid_server_py, os.path.join(path,'socket-server','video_server.py'))
+
+    os.mkdir(os.path.join(path,'socket-server','box_video_info'))
 
 
     with open(os.path.join(path,'numboxes.txt'),'w') as f:
@@ -35,8 +40,12 @@ if __name__=='__main__':
 
     with open(os.path.join(proj_dir,'mysite','settings.py'),'w') as f:
         # now edit the last line of the list of lines
-        new_last_line = 'MEDIA_ROOT=' + '"'  + path  + '"'
-        lines[-1] = new_last_line
+
+        lines[-1] = "MEDIA_URL = '/media/'"
+
+        new_media_root = 'MEDIA_ROOT=' + '"'  + path  + '"\n'
+        lines[-2] = new_media_root
+
 
         # now write the modified list back out to the file
         f.writelines(lines)
