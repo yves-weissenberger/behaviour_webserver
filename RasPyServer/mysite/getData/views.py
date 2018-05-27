@@ -47,8 +47,9 @@ def start_video_server(request,box_nr):
     """ Opens a python process running a socket server if request is to start this. Otherwise kills it
         Also saves the pid of the python process to text file for later working with"""
     root_dir = os.path.split(settings.MEDIA_ROOT)[0]
-    script_pth = os.path.join(root_dir,'socket_server',"run_socket_server.py")
-    sp = subprocess.Popen('python ' + script_pth,shell=1)
+    # This opens a server 
+    script_pth = os.path.join(root_dir,'socket-server',"video_server.py")
+    sp = subprocess.Popen(['python', script_pth,str(box_nr)],shell=0)
     print (sp.pid)
     #print (os.path.split(os.path.split(settings.MEDIA_ROOT)[0]))
     return HttpResponse("Text")
@@ -149,7 +150,7 @@ def write_mouse_ID(request,box_nr):
     pth = os.path.join(ROOT_path,'mousecagemaps','box_' + str(box_nr))
     #openstr = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
 
-    f = open(pth,'w+b')
+    f = open(pth,'w')
     f.write(str(request.POST['mouseID']))
     f.close()
     return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
@@ -292,6 +293,8 @@ def get_PiData(request,box_nr):
     return render(request,'getData/store_data_form.html',context)
 
 
+def get_f_path(box_nr):
+    return None
 
 def write_PiData(request,box_nr):
     

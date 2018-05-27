@@ -20,7 +20,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
 
         box_nr =  text_data_json['box_ID']
-        imgF = os.path.join(settings.MEDIA_ROOT,'media','box_'+str(box_nr))
+        imgF = os.path.join(settings.MEDIA_ROOT,'box_'+str(box_nr))
         #print(imgF)
         fs = [i for i in os.listdir(imgF) if 'j' in i]
         image_store = sorted(fs,key = lambda x: int(re.findall(r".*([0-9]+).*",x)[0]))
@@ -39,6 +39,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 #    message = nIms - 5
 
                 img_loc = image_store[message]
+                #print(img_loc)
 
                 await self.send(text_data=json.dumps({
                     'message': message,
