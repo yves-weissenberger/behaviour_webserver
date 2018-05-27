@@ -76,8 +76,6 @@ def boxes(request):
 def box_info(request, box_nr):
     numBoxes = get_num_boxes()
 
-    box_connected = ping_boxes(numBoxes)
-    mouseIDs = [get_mouse_ID(box_nr) for box_nr in range(numBoxes)]
 
     box_connected = ping_box(box_nr)
     #box_connected = is_online=='True'
@@ -123,7 +121,8 @@ def box_info(request, box_nr):
 
 
 
-
+    print("BOX IS")
+    print(box_connected)
 
     context = {'box_nr': box_nr,'mouse_ID':mouse_ID,
            'task_names_and_durations': zip(tasks,duration_str,task_completions),
@@ -546,19 +545,20 @@ def ping_boxes(numBoxes):
 #_________________________________________________________________________________________________________________
 def ping_box(box_nr):
 
-    base_addr = '192.168.0.' 
+    base_addr = '192.168.0.'
     box_addr = base_addr + str(100 + int(box_nr))
 
-    cmd = ['fping','-r n 1','-t 300',box_addr]
-
+    cmd = ['fping','-t 300','-r 1',box_addr]
+    #a = subprocess.check_output(cmd)
+    #print(a)
+    #print ("HELLO")
     try:
         a = subprocess.check_output(cmd)
-        is_active = re.findall(r'.*(alive).*',a)!=[]
-        if is_active:
+        print(a)
+        if 'alive' in str(a):
             is_active=1
     except:
         is_active = 0
-
 
     return is_active
 
