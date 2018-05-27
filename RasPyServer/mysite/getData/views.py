@@ -46,7 +46,7 @@ def start_video_server(request,box_nr):
 
     """ Opens a python process running a socket server if request is to start this. Otherwise kills it
         Also saves the pid of the python process to text file for later working with"""
-    root_dir = os.path.split(os.path.split(settings.MEDIA_ROOT)[0])[0]
+    root_dir = os.path.split(settings.MEDIA_ROOT)[0]
     script_pth = os.path.join(root_dir,'socket_server',"run_socket_server.py")
     sp = subprocess.Popen('python ' + script_pth,shell=1)
     print (sp.pid)
@@ -164,6 +164,9 @@ def set_mouse_task(request,box_nr):
         p = subprocess.Popen(["ssh", "%s" % ssh_dest, "ls /home/pi/behaviour_scripts"],
                       shell=False, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
         tasks = p.stdout.readlines()
+        tasks = [i.decode("utf-8").replace('\n','').replace('\\n','') for i in tasks]
+        print (tasks)
+        print(type(tasks))
 
         context = {'box_nr': box_nr,'taskList':tasks}
         return render(request, 'getData/set_mouse_task.html',context)
@@ -174,14 +177,14 @@ def set_mouse_task(request,box_nr):
         p = subprocess.Popen(["ssh", "%s" % ssh_dest, "python /home/pi/behaviour_scripts/" + request.POST.get('task_name')],
                       shell=False, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
         retrnTxt = p.stdout.readlines()
-        if (retrnTxt[0]=='hello world\n'):
+        print(retrnTxt)
+        if "hello" in retrnTxt[0].decode("utf-8"):
             pth = os.path.join(ROOT_path,'cage_tasks','box_'+str(box_nr))
             #openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
-
-            f = open(pth,'w+b')
-            task_schedule = str(request.POST['task_name'])
-            f.write(task_schedule)
-            f.close()
+            with open(pth,'w') as f:
+                task_schedule = str(request.POST['task_name'])
+                f.write(task_schedule)
+                f.close()
             return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
     
 
