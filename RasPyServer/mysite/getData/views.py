@@ -620,7 +620,7 @@ def get_mouse_task_schedule(box_nr,piAccess=False):
     if piAccess:
         f = open(openstr_Task,'a')
         
-        time_now = datetime.datetime.now()
+        time_now = datetime.datetime.now().replace(microsecond=0)
         f.write('received'+str(time_now))
         f.close()
 
