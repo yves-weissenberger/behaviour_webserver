@@ -7,6 +7,7 @@
     <script type="text/javascript" src="{% static "getData/js/node_modules/chart.js/dist/Chart.js" %}"> </script>
     <script type="text/javascript" src="{% static "getData/js/node_modules/smoothie/smoothie.js" %}"> </script>
     <script type="text/javascript" src="{% static "getData/js/node_modules/jquery/dist/jquery.min.js" %}"> </script>
+    <script type="text/javascript" src="{% static "getData/js/draw_chart.js" %}"> </script>
 
     <link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}" />
 </head>
@@ -121,6 +122,8 @@
         <div class="column middle" id="right_col">
             <p class="hidden" id="sendInt"> </p>
             <p class="hidden" id="stTime"> </p>
+            <p class="hidden" id="stTime2"> </p>
+
 
 
 <!--           <video autoplay controls width=256 height=256 ></video>
@@ -163,9 +166,13 @@
             </div>
 
         <script>
-                 var Dtemp = " {{  dataStr }} "
+                var Dtemp = " {{  dataStr }} "
+                document.getElementById("stTime").innerHTML =  new Date().getTime()
+
          </script> 
 
+
+         </-- Here let us initialise the two charts-->
          <script>
 
 
@@ -193,8 +200,10 @@
                     
 			  $.get("/getData/{{box_nr}}/get_plot_data/", function(data) {
 			    // Now that we've completed the request schedule the next one.
+			    draw_chart(data['var_elem_flat'],data['count_elem_flat'])
 			    $('#testp').html(data['time']);
-			    setTimeout(worker, 5000);
+			    setTimeout(worker, 2000);
+
 			  });
 			});
 
@@ -219,7 +228,7 @@
                 //document.getElementById("testp").innerHTML = 0
 
                 setInterval(function() {
-                    var txt1 = document.getElementById("testp").innerHTML
+                    var txt1 = document.getElementById("testp").innerHTML = counter
                     chatSocket.send(JSON.stringify({'message': txt1,
                                                     'box_ID': "{{box_nr}}"}))
                 }, 50 );

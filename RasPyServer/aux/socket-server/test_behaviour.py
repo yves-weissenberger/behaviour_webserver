@@ -67,7 +67,7 @@ while 1:
         optoStr = 'optoList:' + '-'.join([str(np.round(entry[0],decimals=3))+entry[1] for entry in optoLst])
         corrStr = "corrList:" + '-'.join([str(i) for i in corrLst])
 
-        sendStr = ','.join([stimStr,respStr,rewStr,optoStr])
+        sendStr = ','.join([stimStr,respStr,rewStr,optoStr,corrStr])
         #print sendStr
 
         sendProc = billiard.Process(target=send_data,args=(sendStr,))

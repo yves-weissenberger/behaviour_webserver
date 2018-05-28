@@ -67,6 +67,7 @@ try:
     output = SplitFrames(connection)
     with picamera.PiCamera(resolution=(640,480), framerate=15) as camera:
         time.sleep(2)
+        camera.rotation = 180
         start = time.time()
         camera.start_recording(output, format='mjpeg')
         camera.wait_recording(1e12)  #this is more time than will ever be required to run

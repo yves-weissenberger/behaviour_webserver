@@ -16,10 +16,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         pass
 
-    def proc_txt_file(self,txt_loc):
-        
-        return None
-
     async def receive(self, text_data):
 
         text_data_json = json.loads(text_data)

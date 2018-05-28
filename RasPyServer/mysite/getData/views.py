@@ -68,15 +68,77 @@ def _get_task_fName(box_nr):
         startT = str(datetime.datetime.now().replace(microsecond=0)).replace(" ",'-')
 
 
-    fName = "_".join([mouse_ID,task,startT.replace(":",'-')])
+    fName = "_".join([mouse_ID,task,startT.replace(":",'-').replace(" ",'-')])
 
     return fName, (mouse_ID,task,startT)
 
 
+
+
+
+
 def get_plot_data(request,box_nr):
+    root_dir = os.path.split(settings.MEDIA_ROOT)[0]
+
     print ("NOOOOOT BAD")
-    timedict= {'time': time.time()}
+    fName, temp_ = _get_task_fName(box_nr)
+    dir_pth = os.path.join(root_dir,'behaviour_data','mousewise',temp_[0])
+    fPath = os.path.join(dir_pth,fName+".csv")
+    varss, evs, var_elem_sets, var_elem_setsFullN, countL = proc_dat(fPath)
+    timedict= {'vars': varss,
+               'var_elem_flat': [item for sublist in var_elem_setsFullN for item in sublist],
+               'count_elem_flat': countL,
+               'counts':1}
     return JsonResponse(timedict)
+
+
+
+
+def proc_dat(pth):
+    
+    with open(pth,'r') as f:
+        lines = f.readlines()
+
+    varss = re.findall(r"([A-z]+)List:",lines[0])
+
+
+    evs = []
+    for ind,v in enumerate(varss):
+        temp_var = [[],[]]
+        for i in range(len(lines)):
+            temp  = re.findall(v+"List:(.*?)[,|\n]",lines[i])[0].split("-")
+            #ts = [re.findall(r"([0-9]*\.[0-9]{1,3})",i)[0] for i in temp if i!='']
+            temp = [i for i in temp if i!='']
+            times = []
+            ts = [i.split("_")[0] for i in temp]
+            evTs = [i.split("_")[1] for i in temp]
+
+            temp_var[0].extend([float(i) for i in ts])
+            temp_var[1].extend(evTs)
+        if len(temp_var[0])!=0:
+            evs.append(temp_var)
+
+    var_elem_sets = []
+    var_elem_setsFullN = []
+
+    kk = 0
+    for i,j in evs:
+        if len(i)!=0:
+            var_elem_sets.append(list(set(j)))
+            var_elem_setsFullN.append([varss[kk]+i for i in list(set(j))])
+
+        kk += 1
+
+    countL = []
+    for i,j in zip([i[1] for i in evs],var_elem_sets):
+        for k in j:
+            countL.append(i.count(k))
+    return varss, evs, var_elem_sets, var_elem_setsFullN, countL
+
+
+
+
+
 
 def start_video_server(request,box_nr):
 
