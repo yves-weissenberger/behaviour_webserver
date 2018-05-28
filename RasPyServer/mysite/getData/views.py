@@ -116,42 +116,24 @@ def box_info(request, box_nr):
     #box_connected = is_online=='True'
     mouse_ID = get_mouse_ID(box_nr)
 
-    task_schedule = get_mouse_task_schedule(box_nr)
-
+    task = "None"
+    time_elapsed = ""
     try:
-        tasks, durations,duration_str = parse_task_schedule(task_schedule)
+        task_schedule = get_mouse_task_schedule(box_nr)
+        task = re.findall(r'(.*).py_',task_schedule)[0]
+        startT = re.findall(r'_received(.*)',task_schedule)[0]
 
+        print(task_schedule)
+        print(task)
+        print (startT)
 
-
-    except:
-        tasks = []
-        durations = []
-        duration_str = []
-
-
-
-    try:
-        time_received = datetime.datetime.strptime(  re.findall(r'.*received(.*)',task_schedule)[0] , '%Y-%m-%d %H:%M:%S.%f')
+        time_received = datetime.datetime.strptime(startT, '%Y-%m-%d %H:%M:%S.%f')
         time_elapsed_tdelta = datetime.datetime.now() - time_received
-        time_elapsed = time_parser( time_elapsed_tdelta.total_seconds() )
-        
-        cumsum_TL = []
-        acc = 0
-        for i in durations:
-                acc += 1
-                cumsum_TL.append(acc)
-        task_completions = [time_elapsed_tdelta.total_seconds()>i for i in cumsum_TL]
-        
+        time_elapsed = time_parser(time_elapsed_tdelta.total_seconds() )
+        print (time_elapsed)
     except IndexError:
-        time_received = 'Not accessed yet'
-        time_elapsed = []
-    if len(tasks)==1:
-        task_completions = [False]
-        total_dur = time_parser(durations[0])
-    else:
-        task_completions = [i<-1 for i in range(len(tasks))]
-        total_dur = time_parser(sum(durations))
-        
+        pass
+            
 
 
 
@@ -160,9 +142,8 @@ def box_info(request, box_nr):
     print(box_connected)
 
     context = {'box_nr': box_nr,'mouse_ID':mouse_ID,
-           'task_names_and_durations': zip(tasks,duration_str,task_completions),
-           'total_duration': total_dur,
-           'time_elapsed': time_elapsed,
+           'task_name': str(task),
+           'time_elapsed': str(time_elapsed),
            'isOnline':box_connected,
            'boxs':range(numBoxes),
            'dataStr': ''}
@@ -218,7 +199,7 @@ def set_mouse_task(request,box_nr):
             #openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
             with open(pth,'w') as f:
                 task_schedule = str(request.POST['task_name'])
-                f.write(task_schedule)
+                f.write(task_schedule+"_received"+str(datetime.datetime.now()))
                 f.close()
             return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
     
@@ -354,16 +335,20 @@ def write_PiData(request,box_nr):
     task_name = f.read()
     ########
     
-    path = base_path + mouse_ID + task_name
+    fold_path = os.path.join(base_path,mouseID)
+    #path = base_path + mouse_ID + task_name
+
+
+    if os.path.isdir(fold_path):
+        pass
+    else:
+        mkdir_p(fold_path)
+
 
     data =request.POST['piData'].split(',')
 
-    if os.path.isdir(path):
-        pass
-    else:
-        mkdir_p(path)
 
-
+    dataPath = os.path.join(fold_path,)
     with open( path+ r'/' 'test.csv','a') as results:
         writer = csv.writer(results,dialect='excel')
         writer.writerow(data)
@@ -562,7 +547,7 @@ def get_mouse_task_schedule(box_nr,piAccess=False):
         f = open(openstr_Task,'r')
     
     except IOError:
-        f = open(openstr_Task,'w+b')
+        f = open(openstr_Task,'w')
         f.write('NO_TASK')
         f.close()
 

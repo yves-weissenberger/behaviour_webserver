@@ -103,18 +103,14 @@
                 <p> <a href="/getData/{{box_nr}}/set_mouse_task/"> Change the task schedule for this cage </a> </p>
                 The Current Task Schedule is:
                 <br>
-                {% for task, duration, completed in task_names_and_durations %}
                     
-                <li> Task: {{task}} , duration: {{duration}},</li>
+                <li> Task: {{task_name}} </li>
+                <li>  duration: {{time_elapsed}} </li>
 
-                <br> Completed: {{completed}}
 
                 <br>
                 <br>
-                {% endfor %}
 
-                Total scheduled run time is {{total_duration}}
-                {{time_elapsed}} have elapsed
                 <p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
                  </a> </p> 
 
