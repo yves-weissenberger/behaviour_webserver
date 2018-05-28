@@ -49,13 +49,40 @@ def start_video_server(request,box_nr):
     root_dir = os.path.split(settings.MEDIA_ROOT)[0]
     # This opens a server 
     script_pth = os.path.join(root_dir,'socket-server',"video_server.py")
+    pth_pids = os.path.join(ROOT_path,"socket-server","box_video_info")
+    with open(os.path.join(pth_pids,'box_'+str(box_nr)),'r') as f:
+        ppid = f.readline()
+
+
+    if re.findall(r'[0-9]+',ppid):
+        print ('aleady running')
+        #os.kill(ppid)
+
     sp = subprocess.Popen(['python', script_pth,str(box_nr)],shell=0)
-    print (sp.pid)
-    sp_remote = subprocess.Popen(["ssh","pi@192.168.0."+str(100+int(box_nr)),"python ~/socket_video/video_provider.py"])
+    with open(os.path.join(pth_pids,'box_'+str(box_nr)),'w') as f:
+        f.write(str(sp.pid))
+
+  
+
+
+
+    sp_remote = subprocess.Popen(["ssh","pi@192.168.0."+str(100+int(box_nr)),"python ~/socket_video/video_provider.py"],
+        shell=False, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
+    remote_pid = sp_remote.stdout.readlines()
+    print("remote pid:")
+    print(remote_pid)
     #print (os.path.split(os.path.split(settings.MEDIA_ROOT)[0]))
     return HttpResponse("Text")
 
-def stop_video_server(request):
+def stop_video_server(request,box_nr):
+    pth_pids = os.path.join(ROOT_path,"socket-server","box_video_info")
+    fullP = os.path.join(pth_pids,'box_'+str(box_nr))
+
+    with open(fullP,'r') as f:
+        temp = f.readline()
+    temp2 = str(re.findall(r'[0-9]+',temp)[0])
+    sp_remote = subprocess.check_output(["kill", str(temp2)])
+    print(sp_remote)
     return None
 
 
@@ -220,11 +247,11 @@ def write_num_boxes(request):
     pth_mcm = os.path.join(ROOT_path,'mousecagemaps')
     pth_cgT = os.path.join(ROOT_path,'cage_tasks')
     pth_media = os.path.join(ROOT_path,'media')
-
+    pth_pids = os.path.join(ROOT_path,"socket-server","box_video_info")
     nSet_cages = len(os.listdir(pth_mcm))
-    for i in range(nSet_cages,int(new_N_boxes)):
+    for i in range(0,int(new_N_boxes)):
 
-        print("number going now is", i)
+        print("number going now is")
         newF = os.path.join(pth_mcm,'box_'+str(i))
         with open(newF, 'w') as fi:
             fi.write("None")
@@ -233,8 +260,14 @@ def write_num_boxes(request):
         with open(newF2, 'w') as fj:
             fj.write("None")
 
+        newF3 = os.path.join(pth_pids,'box_'+str(i))
+        #print (newF3)
+        with open(newF3,'w') as fk:
+            fk.write("None")
+
         newD1 = os.path.join(pth_media,'box_'+str(i))
-        os.mkdir(newD1)
+        if not os.path.isdir(newD1):
+            os.mkdir(newD1)
         #with open(newF2, 'w') as fj:
         #    fj.write("None")
 

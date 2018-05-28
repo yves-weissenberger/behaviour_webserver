@@ -46,6 +46,8 @@ class SplitFrames(object):
 client_socket = socket.socket()
 client_socket.connect(('192.168.0.38', 8000+int(piId)))
 connection = client_socket.makefile('wb')
+with open("~/curr_pid.txt" 'w') as f:
+    f.write(os.get_pid())
 try:
     output = SplitFrames(connection)
     with picamera.PiCamera(resolution=(480,480), framerate=15) as camera:

@@ -30,8 +30,8 @@ if __name__=="__main__":
     #argparse.parse_args()
     box_nr = sys.argv[1]
 
-    proc1 = subprocess.Popen(['ssh','pi@192.168.0.' + str(box_nr), 'mkdir socket_video'],
-        shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    #proc1 = subprocess.Popen(['ssh','pi@192.168.0.' + str(box_nr), 'mkdir socket_video'],
+    #    shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     cFP = os.path.abspath(__file__)
 
     fp = os.path.join(os.path.split(cFP)[0], "socket-server", "video_provider.py")

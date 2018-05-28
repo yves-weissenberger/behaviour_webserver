@@ -16,11 +16,11 @@ server_socket.listen(0)
 # Accept a single connection and make a file-like object out of it
 connection = server_socket.accept()[0].makefile('rb')
 base = os.path.split(os.path.split(os.path.abspath(__file__))[0])[0]
-base_save = os.path.join(base,'media','box_8')
+base_save = os.path.join(base,'media','box_'+str(boxNr))
 #base_save = '/home/rastamouse/Documents/Code/RasPyServer/mysite/getData/static/getData/ims'
 try:
     st = time.time() 
-    nIms = 0 
+    nIms = len(os.listdir(base_save)) 
     while True:
         # Read the length of the image as a 32-bit unsigned int. If the
         # length is zero, quit the loop

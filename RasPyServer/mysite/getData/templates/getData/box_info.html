@@ -17,8 +17,8 @@
 
     <div class=row id="wrap">
     
-    <button id="view_video">  View </button>
-    <button id="save_video">  Save Video</button>
+    <button id="view_video">  Start_Video </button>
+    <button id="stop_video">  Stop Video</button>
 
     <script type="text/javascript">
         $(document).ready( function() {
@@ -27,6 +27,20 @@
             $("#view_video").click( function() {   
                     
                     $.post("/getData/{{box_nr}}/start_video/",
+                        {click: "this is a string"},
+                        function (data) {
+                            
+                            //alert("You clicked the button using JQuery!");
+
+                            // success callback
+                            // you can process data returned by function from views.py
+                        }
+                    );
+                });
+
+            $("#stop_video").click( function() {   
+                    
+                    $.post("/getData/{{box_nr}}/stop_video/",
                         {click: "this is a string"},
                         function (data) {
                             
