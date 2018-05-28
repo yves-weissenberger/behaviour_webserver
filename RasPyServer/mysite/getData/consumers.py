@@ -39,7 +39,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     message = (int(text_data_json['message']) + 1)
 
                     if (nIms-message)>20:
-                        message = nIms - 10
+                        message = nIms - 5
 
                     img_loc = image_store[message]
                     #print(img_loc)

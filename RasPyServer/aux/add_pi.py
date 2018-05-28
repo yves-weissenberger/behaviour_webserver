@@ -30,8 +30,13 @@ if __name__=="__main__":
     #argparse.parse_args()
     box_nr = sys.argv[1]
 
-    #proc1 = subprocess.Popen(['ssh','pi@192.168.0.' + str(box_nr), 'mkdir socket_video'],
-    #    shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    proc1 = subprocess.Popen(['ssh','pi@192.168.0.' + str(box_nr), 'mkdir socket_video'],
+        shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+
+
+    proc0 = subprocess.Popen(['ssh','pi@192.168.0.' + str(box_nr), 'mkdir behaviour_scripts'],
+        shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+
     cFP = os.path.abspath(__file__)
 
     fp = os.path.join(os.path.split(cFP)[0], "socket-server", "video_provider.py")
@@ -41,4 +46,13 @@ if __name__=="__main__":
     proc2 = subprocess.Popen(['scp',fp,'pi@192.168.0.' + str(box_nr)+":/home/pi/socket_video/video_provider.py"],
         shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
     print(proc2.stderr.readlines())
+
+
+    fp = os.path.join(os.path.split(cFP)[0], "socket-server", "test_behaviour.py")
+    print(fp)
+
+    proc3 = subprocess.Popen(['scp',fp,'pi@192.168.0.' + str(box_nr)+":/home/pi/behaviour_scripts/test_behaviour.py"],
+        shell=False,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+    print(proc3.stderr.readlines())
+
 

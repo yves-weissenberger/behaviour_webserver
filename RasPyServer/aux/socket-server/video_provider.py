@@ -4,6 +4,8 @@ import struct
 import time
 import picamera
 import fcntl
+import time
+import os
 
 def get_ip_address(ifname):
     """ Function from 
@@ -17,10 +19,18 @@ def get_ip_address(ifname):
     )[20:24])
 
 
-
+def get_task_start_time():
+    try:
+        with open("/home/pi/task_time.txt",'r') as f:
+            temp = f.readline()
+    except IOError:
+        temp = time.time()
+        print("Warning no task running, using recording start as reference")
+    return float(temp)
 
 piIp = get_ip_address('wlan0')
 piId = str(int(piIp[-3:])-100)
+st = get_task_start_time()
 
 
 class SplitFrames(object):
@@ -35,6 +45,11 @@ class SplitFrames(object):
             # then the data
             size = self.stream.tell()
             if size > 0:
+                print time.time()
+                self.connection.write(struct.pack('<f', (time.time()-st)))
+                self.connection.flush()
+                self.stream.seek(0)
+
                 self.connection.write(struct.pack('<L', size))
                 self.connection.flush()
                 self.stream.seek(0)
@@ -46,15 +61,15 @@ class SplitFrames(object):
 client_socket = socket.socket()
 client_socket.connect(('192.168.0.38', 8000+int(piId)))
 connection = client_socket.makefile('wb')
-with open("~/curr_pid.txt" 'w') as f:
-    f.write(os.get_pid())
+with open("/home/pi/curr_pid.txt", 'w') as f:
+    f.write(str(os.getpid()))
 try:
     output = SplitFrames(connection)
-    with picamera.PiCamera(resolution=(480,480), framerate=15) as camera:
+    with picamera.PiCamera(resolution=(640,480), framerate=15) as camera:
         time.sleep(2)
         start = time.time()
         camera.start_recording(output, format='mjpeg')
-        camera.wait_recording(90)
+        camera.wait_recording(1e12)  #this is more time than will ever be required to run
         camera.stop_recording()
         # Write the terminating 0-length to the connection to let the
         # server know we're done
