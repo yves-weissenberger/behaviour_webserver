@@ -42,11 +42,64 @@ with open(os.path.join(os.path.split(os.path.split(__file__)[0])[0],"ROOT_dir.tx
 #ROOT_path = os.path.split(os.path.split(__file__)[0])[0]
 #ROOT_path = '/home/rastamouse/Documents/Data/'
 
+
+def _get_task_fName(box_nr):
+
+
+
+    openstr_MouseID = os.path.join(ROOT_path,'mousecagemaps','box_'+str(box_nr))
+    with open(openstr_MouseID,'r') as f:
+        mouse_ID = f.read()
+    ######
+    openstr_Task = os.path.join(ROOT_path,'cage_tasks','box_'+str(box_nr))
+
+    #openstr_Task = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
+    try:
+        with open(openstr_Task,'r') as f:
+            task_schedule = f.read()
+        ########
+        #task_schedule = get_mouse_task_schedule(box_nr)
+        task = re.findall(r'(.*).py_',task_schedule)[0]
+        startT = re.findall(r'_received(.*)',task_schedule)[0]
+    except IndexError:
+        print("Warning no task set recording in generic location")
+        task = "random"
+        startT = str(datetime.datetime.now().replace(microsecond=0)).replace(" ",'-')
+
+
+    fName = "_".join([mouse_ID,task,startT.replace(":",'-')])
+
+    return fName, (mouse_ID,task,startT)
+
 def start_video_server(request,box_nr):
 
     """ Opens a python process running a socket server if request is to start this. Otherwise kills it
         Also saves the pid of the python process to text file for later working with"""
     root_dir = os.path.split(settings.MEDIA_ROOT)[0]
+
+    fName, temp = _get_task_fName(box_nr)
+
+    mouse_ID,task,startT = temp
+    fold_path0 = os.path.join(ROOT_path,"socket-server","data",mouse_ID)
+
+    print (fold_path0)
+    if os.path.isdir(fold_path0):
+        pass
+    else:
+        mkdir_p(fold_path0)
+
+    fold_path1 = os.path.join(ROOT_path,"socket-server","data",mouse_ID,fName)
+
+    print (fold_path1)
+    if os.path.isdir(fold_path1):
+        pass
+    else:
+        mkdir_p(fold_path1)
+
+
+
+
+
     # This opens a server 
     script_pth = os.path.join(root_dir,'socket-server',"video_server.py")
     pth_pids = os.path.join(ROOT_path,"socket-server","box_video_info")
@@ -54,13 +107,19 @@ def start_video_server(request,box_nr):
         ppid = f.readline()
 
 
+
+
+
+
     if re.findall(r'[0-9]+',ppid):
         print ('aleady running')
         #os.kill(ppid)
 
-    sp = subprocess.Popen(['python', script_pth,str(box_nr)],shell=0)
+    sp = subprocess.Popen(['python', script_pth,str(box_nr),fold_path1],shell=0)
     with open(os.path.join(pth_pids,'box_'+str(box_nr)),'w') as f:
         f.write(str(sp.pid))
+        f.write("\n")
+        f.write(fold_path1)
 
   
 
@@ -166,7 +225,7 @@ def write_mouse_ID(request,box_nr):
     #openstr = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
 
     f = open(pth,'w')
-    f.write(str(request.POST['mouseID']))
+    f.write(str(request.POST['mouse_ID']))
     f.close()
     return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
     
@@ -199,7 +258,7 @@ def set_mouse_task(request,box_nr):
             #openstr = '/home/rastamouse/Documents/Data/cage_tasks/' + 'box_' + str(box_nr)
             with open(pth,'w') as f:
                 task_schedule = str(request.POST['task_name'])
-                f.write(task_schedule+"_received"+str(datetime.datetime.now()))
+                f.write(task_schedule+"_received"+str(datetime.datetime.now().replace(microsecond=0)))
                 f.close()
             return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
     
@@ -334,11 +393,15 @@ def write_PiData(request,box_nr):
     f = open(openstr_Task,'r')
     task_name = f.read()
     ########
-    
-    fold_path = os.path.join(base_path,mouseID)
+    task_schedule = get_mouse_task_schedule(box_nr)
+    task = re.findall(r'(.*).py_',task_schedule)[0]
+    startT = re.findall(r'_received(.*)',task_schedule)[0]
+
+
+    fold_path = os.path.join(ROOT_path,"behaviour_data","mousewise",mouse_ID)
     #path = base_path + mouse_ID + task_name
-
-
+    print("CCCLOC")
+    print (fold_path)
     if os.path.isdir(fold_path):
         pass
     else:
@@ -347,9 +410,9 @@ def write_PiData(request,box_nr):
 
     data =request.POST['piData'].split(',')
 
-
-    dataPath = os.path.join(fold_path,)
-    with open( path+ r'/' 'test.csv','a') as results:
+    filePath = "_".join([mouse_ID,task,startT.replace(":",'-')]) + ".csv"
+    dataPath = os.path.join(fold_path,filePath)
+    with open( dataPath,'a') as results:
         writer = csv.writer(results,dialect='excel')
         writer.writerow(data)
 

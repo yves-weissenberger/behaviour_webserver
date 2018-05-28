@@ -45,7 +45,7 @@ class SplitFrames(object):
             # then the data
             size = self.stream.tell()
             if size > 0:
-                print time.time()
+                #print time.time()
                 self.connection.write(struct.pack('<f', (time.time()-st)))
                 self.connection.flush()
                 self.stream.seek(0)
