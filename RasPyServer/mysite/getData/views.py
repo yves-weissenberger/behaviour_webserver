@@ -81,9 +81,15 @@ def stop_video_server(request,box_nr):
     with open(fullP,'r') as f:
         temp = f.readline()
     temp2 = str(re.findall(r'[0-9]+',temp)[0])
-    sp_remote = subprocess.check_output(["kill", str(temp2)])
-    print(sp_remote)
-    return None
+    sp_remote = os.system("kill " + "$(cat " + str(fullP)+")")
+
+    #sp_remote = subprocess.check_output(["kill", str(temp2)])
+    #sp_remote = subprocess.check_output(["kill " + "$(cat " + fullP+")"])
+    sp_remote = os.system("kill " + "$(cat " + fullP+")")
+
+    with open(fullP,'w') as f:
+        temp = f.write("None")
+    return HttpResponse("Text")
 
 
 def boxes(request):
