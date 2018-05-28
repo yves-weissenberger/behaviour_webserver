@@ -24,6 +24,8 @@ try:
     while True:
         # Read the length of the image as a 32-bit unsigned int. If the
         # length is zero, quit the loop
+        timestamp = struct.unpack('<f', connection.read(struct.calcsize('<f')))[0]
+        #timestamp = nIms
         image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
         if not image_len:
             break
@@ -37,7 +39,8 @@ try:
         image = Image.open(image_stream)
 
         #print('Image is %dx%d' % image.size)
-        image.save(os.path.join(base_save,str(nIms))+".jpg",format='jpeg')
+        fName = str(nIms) + '_' + str(timestamp).replace(".",'-') + '.jpg'
+        image.save(os.path.join(base_save,fName),format='jpeg')
         #print('Image is verified')
         nIms += 1
         #print("n: %s" %nIms)
