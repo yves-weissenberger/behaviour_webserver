@@ -152,44 +152,6 @@
                 <div style="height: 150px; width: 600px">
                     <canvas id="myChart_smooth" width="600" height="150"></canvas>
 
-                    <script>    
-                        var chatSocket = new WebSocket(
-                        'ws://' + window.location.host +
-                        '/ws/getData/' + "{{box_nr}}" + '/');
-
-                        //var videoSocket = new WebSocket(
-                        //'ws://' + window.location.host +
-                        //'/ws/getData/' + "{{box_nr}}" + '/getPi_vid');
-
-                        var counter = 0;
-                        document.getElementById("testp").innerHTML = 0
-
-                        setInterval(function() {
-                            var txt1 = document.getElementById("testp").innerHTML
-                            chatSocket.send(JSON.stringify({'message': txt1,
-                                                            'box_ID': "{{box_nr}}"}))
-                        }, 50 );
-
-
-
-
-
-                         chatSocket.onmessage = function(e) {
-                                var data = JSON.parse(e.data);
-                                var message = data['message'];
-                                document.getElementById("testp").innerHTML = data['message'];
-                                var img_str = data['img_loc']
-                                document.getElementById("testp2").innerHTML = "{{MEDIA_URL}}" + img_str
-                                document.getElementById('testim').src = "{{MEDIA_URL}}" + img_str
-                            };
-
-
-                        chatSocket.onclose = function(e) {
-                        console.error('Chat socket closed unexpectedly');
-                    }
-
-
-                    </script>
 
                 </div>
             </div>
@@ -204,8 +166,85 @@
                  var Dtemp = " {{  dataStr }} "
          </script> 
 
-         <script src="{% static "getData/js/read_data.js" %}">  
+         <script>
+
+
+         	var smoothie = new SmoothieChart({interpolation:'step',
+                                    grid:{fillStyle:'#ffffff',
+                                          verticalSections:0,
+                                          millisPerLine:12000},
+                                    yRangeFunction:myYRangeFunction,
+                                    millisPerPixel:58,});
+         	smoothie.streamTo(document.getElementById("myChart_smooth"));
+
+         	function myYRangeFunction(range) {
+			  // TODO implement your calculation using range.min and range.max
+			  return {min: 0, max: 3};
+			}
+
+
+
           </script>
+
+          <script type="text/javascript">
+          	
+
+        $(document).ready( function worker() {   
+                    
+			  $.get("/getData/{{box_nr}}/get_plot_data/", function(data) {
+			    // Now that we've completed the request schedule the next one.
+			    $('#testp').html(data['time']);
+			    setTimeout(worker, 5000);
+			  });
+			});
+
+
+
+          </script>
+
+
+
+
+
+            <script>    
+                var chatSocket = new WebSocket(
+                'ws://' + window.location.host +
+                '/ws/getData/' + "{{box_nr}}" + '/');
+
+                //var videoSocket = new WebSocket(
+                //'ws://' + window.location.host +
+                //'/ws/getData/' + "{{box_nr}}" + '/getPi_vid');
+
+                var counter = 0;
+                //document.getElementById("testp").innerHTML = 0
+
+                setInterval(function() {
+                    var txt1 = document.getElementById("testp").innerHTML
+                    chatSocket.send(JSON.stringify({'message': txt1,
+                                                    'box_ID': "{{box_nr}}"}))
+                }, 50 );
+
+
+                // This is the callback for updating the images on the website
+
+
+                 chatSocket.onmessage = function(e) {
+                        var data = JSON.parse(e.data);
+                        var message = data['message'];
+                        //document.getElementById("testp").innerHTML = data['message'];
+                        var img_str = data['img_loc']
+                        document.getElementById("testp2").innerHTML = "{{MEDIA_URL}}" + img_str
+                        document.getElementById('testim').src = "{{MEDIA_URL}}" + img_str
+                    };
+
+
+                chatSocket.onclose = function(e) {
+                console.error('Chat socket closed unexpectedly');
+            }
+
+
+                    </script>
+
         </div>
 
         </div>

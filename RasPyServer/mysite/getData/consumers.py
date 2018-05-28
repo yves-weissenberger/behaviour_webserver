@@ -16,6 +16,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         pass
 
+    def proc_txt_file(self,txt_loc):
+        
+        return None
+
     async def receive(self, text_data):
 
         text_data_json = json.loads(text_data)
@@ -27,8 +31,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         fpath0 = os.path.join(root_dir,"socket-server","box_video_info","box_"+str(box_nr))
         with open(fpath0,'r') as f:
             temp_txt = f.readlines()
+        try:
             imgF = temp_txt[1]
             #print(imgF)
+        except IndexError:
+            imgF = os.path.split(fpath0)[0]
         fs = [i for i in os.listdir(imgF) if 'j' in i]
         image_store = sorted(fs,key = lambda x: int(re.findall(r".*(^[0-9]+).*",x)[0]))
         nIms = len(image_store)
@@ -46,7 +53,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                     message = (int(text_data_json['message']) + 1)
 
-                    if (nIms-message)>20:
+                    if (nIms-message)>10:
                         message = nIms - 5
 
                     img_loc = os.path.join("socket-server","data",os.path.split(os.path.split(imgF)[0])[1],

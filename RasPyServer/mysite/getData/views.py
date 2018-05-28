@@ -24,6 +24,7 @@ import os, errno
 import csv
 import os
 import re
+import time
 import ast
 import subprocess
 from multiprocessing.dummy import Pool
@@ -31,7 +32,7 @@ import zipfile
 import json
 import subprocess
 import pathlib
-
+from django.http import JsonResponse
 
 #________________________________________________________________________________________________________
 
@@ -71,6 +72,12 @@ def _get_task_fName(box_nr):
 
     return fName, (mouse_ID,task,startT)
 
+
+def get_plot_data(request,box_nr):
+    print ("NOOOOOT BAD")
+    timedict= {'time': time.time()}
+    return JsonResponse(timedict)
+
 def start_video_server(request,box_nr):
 
     """ Opens a python process running a socket server if request is to start this. Otherwise kills it
@@ -82,7 +89,6 @@ def start_video_server(request,box_nr):
     mouse_ID,task,startT = temp
     fold_path0 = os.path.join(ROOT_path,"socket-server","data",mouse_ID)
 
-    print (fold_path0)
     if os.path.isdir(fold_path0):
         pass
     else:
@@ -90,7 +96,6 @@ def start_video_server(request,box_nr):
 
     fold_path1 = os.path.join(ROOT_path,"socket-server","data",mouse_ID,fName)
 
-    print (fold_path1)
     if os.path.isdir(fold_path1):
         pass
     else:
@@ -128,8 +133,6 @@ def start_video_server(request,box_nr):
     sp_remote = subprocess.Popen(["ssh","pi@192.168.0."+str(100+int(box_nr)),"python ~/socket_video/video_provider.py"],
         shell=False, stdout=subprocess.PIPE, stderr = subprocess.PIPE)
     remote_pid = sp_remote.stdout.readlines()
-    print("remote pid:")
-    print(remote_pid)
     #print (os.path.split(os.path.split(settings.MEDIA_ROOT)[0]))
     return HttpResponse("Text")
 
@@ -182,11 +185,8 @@ def box_info(request, box_nr):
         task = re.findall(r'(.*).py_',task_schedule)[0]
         startT = re.findall(r'_received(.*)',task_schedule)[0]
 
-        print(task_schedule)
-        print(task)
-        print (startT)
 
-        time_received = datetime.datetime.strptime(startT, '%Y-%m-%d %H:%M:%S.%f')
+        time_received = datetime.datetime.strptime(startT, '%Y-%m-%d %H:%M:%S')
         time_elapsed_tdelta = datetime.datetime.now() - time_received
         time_elapsed = time_parser(time_elapsed_tdelta.total_seconds() )
         print (time_elapsed)
@@ -196,9 +196,6 @@ def box_info(request, box_nr):
 
 
 
-
-    print("BOX IS")
-    print(box_connected)
 
     context = {'box_nr': box_nr,'mouse_ID':mouse_ID,
            'task_name': str(task),
@@ -222,11 +219,10 @@ def set_mouse_ID(request,box_nr):
 def write_mouse_ID(request,box_nr):
 
     pth = os.path.join(ROOT_path,'mousecagemaps','box_' + str(box_nr))
+    print (request.POST.keys())
     #openstr = '/home/rastamouse/Documents/Data/mousecagemaps/' + 'box_' + str(box_nr)
-
-    f = open(pth,'w')
-    f.write(str(request.POST['mouse_ID']))
-    f.close()
+    with open(pth,'w') as f:
+        f.write(str(request.POST['mouse_ID']))
     return HttpResponseRedirect(reverse('getData:box_info',args=(box_nr,)))
     
 
@@ -410,7 +406,7 @@ def write_PiData(request,box_nr):
 
     data =request.POST['piData'].split(',')
 
-    filePath = "_".join([mouse_ID,task,startT.replace(":",'-')]) + ".csv"
+    filePath = "_".join([mouse_ID,task,startT.replace(":",'-').replace(" ",'-')]) + ".csv"
     dataPath = os.path.join(fold_path,filePath)
     with open( dataPath,'a') as results:
         writer = csv.writer(results,dialect='excel')

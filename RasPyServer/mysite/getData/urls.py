@@ -20,6 +20,7 @@ urlpatterns = [
 	url(r'^(?P<box_nr>[0-9]+)/get_pi_ims/$', views.get_pi_ims, name='get_pi_ims'),
 	url(r'^(?P<box_nr>[0-9]+)/write_pi_ims/$', views.write_pi_ims, name='write_pi_ims'),
 	url(r'^(?P<box_nr>[0-9]+)/start_video/$', views.start_video_server, name='start_video_server'),
+	url(r'^(?P<box_nr>[0-9]+)/get_plot_data/$', views.get_plot_data, name='get_plot_data'),
 	url(r'^(?P<box_nr>[0-9]+)/stop_video/$', views.stop_video_server, name='stop_video_server'),
 	url(r'^set_num_boxes/$', views.set_num_boxes, name='set_num_boxes'),
 	url(r'^write_num_boxes/$', views.write_num_boxes, name='write_num_boxes'),
