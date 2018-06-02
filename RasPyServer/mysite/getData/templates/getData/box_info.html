@@ -9,7 +9,7 @@
     <script type="text/javascript" src="{% static "getData/js/node_modules/jquery/dist/jquery.min.js" %}"> </script>
     <script type="text/javascript" src="{% static "getData/js/draw_chart.js" %}"> </script>
 
-    <link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'getData/box_style.css' %}?{% now "U" %}" />
 </head>
 
 
@@ -17,75 +17,27 @@
 
 
     <div class=row id="wrap">
-    
-    <button id="view_video">  Start_Video </button>
-    <button id="stop_video">  Stop Video</button>
-
-    <script type="text/javascript">
-        $(document).ready( function() {
-            //alert("You clicked the button using JQuery!");
-
-            $("#view_video").click( function() {   
-                    
-                    $.post("/getData/{{box_nr}}/start_video/",
-                        {click: "this is a string"},
-                        function (data) {
-                            
-                            //alert("You clicked the button using JQuery!");
-
-                            // success callback
-                            // you can process data returned by function from views.py
-                        }
-                    );
-                });
-
-            $("#stop_video").click( function() {   
-                    
-                    $.post("/getData/{{box_nr}}/stop_video/",
-                        {click: "this is a string"},
-                        function (data) {
-                            
-                            //alert("You clicked the button using JQuery!");
-
-                            // success callback
-                            // you can process data returned by function from views.py
-                        }
-                    );
-                });
-        
-        });
-    </script>
 
 
         <nav class="navigation">
                 <ul class="mainmenu">
-                  <li> <a href="/getData/">Home</a> </li>
-                  <li><a href="#news">Go to box</a>
+                  <li class="navli" > <a href="/getData/">Home</a> </li>
+                  <li class="navli" ><a href="#news">Go to box</a>
                     <ul class="submenu">
                         {% for box_n in boxs %}
-                        <li><a  href="/getData/{{box_n}}/"> Box Nr: {{box_n}}</a></li>
+                        <li class="navli"><a  href="/getData/{{box_n}}/"> Box Nr: {{box_n}}</a></li>
                         {% endfor %}
                     </ul>
                   </li>
-                  <li><a href="#contact">Mouse History</a></li>
-                  <li><a href="#about">About</a></li>
+                  <li class="navli" > <a href="#contact">Mouse History</a></li>
+                  <li class="navli" > <a href="#about">About</a></li>
                 </ul>
         </nav>
 
 
           <div class="column left">
 
-                <div id="control_box">
-
-                <p id="testp"> This is a test </p>
-                <p id="testp1"> "{% static "getData/ims/IMG_0170.jpg" %}" </p>
-                <p id="testp2"> Testp2 </p>
-
-                <img id="testim" src="{% static "getData/ims/IMG_0170.jpg" %}" height=480, width=480> </img>
-
-                
                 <h1> Box {{box_nr}} </h1>
-
 
                 {% if isOnline %}
                     <font color="green">The box is online!</font> 
@@ -114,6 +66,19 @@
 
                 <p> <a href="/getData/{{box_nr}}/{{isOnline}}/upload_new_task"> Upload New Task to Server and Cage
                  </a> </p> 
+
+                <div id="control_box">
+
+                <p id="testp"> This is a test </p>
+                <p id="testp1"> "{% static "getData/ims/IMG_0170.jpg" %}" </p>
+                <p id="testp2"> Testp2 </p>
+
+                <img id="testim" src="{% static "getData/ims/IMG_0170.jpg" %}" height=480, width=480> </img>
+                <button id="view_video">  Start_Video </button>
+                <button id="stop_video">  Stop Video</button>
+
+                
+
 
                 </div>
 
@@ -170,6 +135,34 @@
                 document.getElementById("stTime").innerHTML =  new Date().getTime()
 
          </script> 
+
+
+        <script type="text/javascript">
+        // This is block of code to deal with the play and pause video acquisition buttons
+            $(document).ready( function() {
+                //alert("You clicked the button using JQuery!");
+
+                $("#view_video").click( function() {   
+                        
+                        $.post("/getData/{{box_nr}}/start_video/",
+                            {click: "this is a string"},
+                            function (data) {                            
+                            }
+                        );
+                    });
+
+                $("#stop_video").click( function() {   
+                        
+                        $.post("/getData/{{box_nr}}/stop_video/",
+                            {click: "this is a string"},
+                            function (data) {
+                            }
+                        );
+                    });
+            
+            });
+        </script>
+
 
 
          </-- Here let us initialise the two charts-->
@@ -247,12 +240,12 @@
                     };
 
 
-                chatSocket.onclose = function(e) {
-                console.error('Chat socket closed unexpectedly');
-            }
+                    chatSocket.onclose = function(e) {
+                    console.error('Chat socket closed unexpectedly');
+                }
 
 
-                    </script>
+            </script>
 
         </div>
 

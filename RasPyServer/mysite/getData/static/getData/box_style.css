@@ -1,10 +1,7 @@
-li a {
-    color: #252525;
-}
-
 h1 {
     color: #252525;
 }
+
 
 #sendInt {
   display: none;
@@ -14,25 +11,6 @@ h1 {
   display: none;
 }
 
-.graph_li {
-    list-style-type: none; /*to remove bullets*/
-    text-align: left;
-    margin: 0 auto;
-    padding: 0px;
-    display:flex;
-    height: 150px;
-    flex-direction: column;
-    color: black;
-
-}
-
-li{
-    float: right;
-    padding: 2px;
-    width: 150px;
-    margin-top: auto ;
-    margin-bottom: auto ;
-}
 
 h2 {
     color: #252525;
@@ -43,23 +21,10 @@ body {
   font-family: "ff-tisa-web-pro",serif;
   font-size: 16px;
   font-weight: 400;
-  line-height: 1.45;
+  line-height: 2.0;
   color: #333;
-  padding: 1em;
 }
 
-/*
- ul {
-    margin: 0;
-    padding: 0;
-    width: 20%;
-    background-color: #f1f1f1;
-    height: 100%; 
-    position: fixed; 
-    overflow: auto; Enable scrolling if the sidenav has too much content 
-
-}
-*/
 
 .column {
     float: left;
@@ -81,25 +46,31 @@ body {
     margin-top: 10%
 }
 
+/* In here lets define the CSS for the dropdown menu
+
+*/
 
 
-/* define a fixed width for the entire menu */
+.navigation{
+  width: 200px;
+  height: 100%;
+  position: fixed;
+  background-color: #CCC;
 
-.navigation {
-  min-width: 300px;
 }
-/* reset our lists to remove bullet points and padding */
-
-.mainmenu,
-.submenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.mainmenu{
+    list-style-type: none;
+    margin: 0;
+    padding: 0px;
+    width: 200px;
+    height: 100%; /* Full height */
+    position: fixed; /* Make it stick, even on scroll */
+    overflow: auto; /* Enable scrolling if the sidenav has too much content */
 }
-/* make ALL links (main and submenu) have padding and background color */
+
+
 
 .mainmenu a {
-  display: block;
   background-color: #CCC;
   text-decoration: none;
   padding: 10px;
@@ -110,20 +81,11 @@ body {
 .mainmenu a:hover {
   background-color: #C5C5C5;
 }
-/* when hovering over a .mainmenu item,
-      display the submenu inside it.
-      we're changing the submenu's max-height from 0 to 200px;
-    */
 
 .mainmenu li:hover .submenu {
-  display: block;
-  min-height: 200px;
+  min-height: 205px;
   height: auto;
 }
-/*
-      we now overwrite the background-color for .submenu links only.
-      CSS reads down the page, so code at the bottom will overwrite the code at the top.
-    */
 
 .submenu a {
   background-color: #999;
@@ -137,11 +99,22 @@ body {
       we set it to max-height: 0, and hide the overflowed content.
     */
 
+
+
+
+/* By Setting max height to 0, the contents here are hidden until you hover over it */
 .submenu {
   overflow: hidden;
   max-height: 0;
   -webkit-transition: all 0.5s ease-out;
 }
+
+.submenu {
+  list-style: none;
+  padding: 0px;
+  margin: 0;
+}
+
 
 /* 
   This is the css code that is used for the animations

@@ -1,6 +1,6 @@
 {% load static %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'getData/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'getData/style.css' %}?{% now "U" %}" />
 
  <div class="banner banner3">
 		<h1> RasPySever </h1>
@@ -26,25 +26,33 @@ th, td {
 <br>
 <br>
 <h2> Control Boxes and Update Info </h2>
-<table border="1" style="width:100%">
+<table class="box_table">
 
   <tr>
     <th>Cage Number</th>
     <th>Mouse ID</th>
-    <th>Status</th>
+    <th>Task Running</th>
+
   </tr>
 
 {% for box, mouseID,isOnline in boxs_and_IDs %}
 	<tr>
-		<td><a href="/getData/{{box}}/"> Box Nr: {{box}} </a> </td>
-		<td> {{mouseID}}  </td>
-		{% if isOnline %}
-		<td>  <font color="green">online!</font>  </td>
-		{% endif %}
+		<td>
+			{% if isOnline %}
+				<div class="onLabel green"></div> 
+			{% endif %}
 
-		{% if not isOnline %}
-		<td>  <font color="red">offline</font>  </td>
-		{% endif %}
+			{% if not isOnline %}
+				<div class="onLabel red"></div>  
+			{% endif %}
+
+
+
+			<a href="/getData/{{box}}/"> Box {{box}} </a> 
+		</td>
+		<td> {{mouseID}}  </td>
+		<td>  None   </td>
+
  <br>
 	</tr>
 {% endfor %}

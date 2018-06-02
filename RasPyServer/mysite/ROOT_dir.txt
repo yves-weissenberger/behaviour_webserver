@@ -1,1 +1,1 @@
-ROOT_dir=/home/rastamouse/Desktop/server-folds/
+ROOT_dir=/Users/yves/Desktop/serfs
