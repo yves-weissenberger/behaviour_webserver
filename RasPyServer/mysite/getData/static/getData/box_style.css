@@ -3,6 +3,18 @@ h1 {
 }
 
 
+a { text-decoration: none;
+  font-size: 14px;
+  padding: 10px;
+    color: #000;
+  }
+
+
+a:hover {
+   color: #C5C5C5;
+
+}
+
 #sendInt {
   display: none;
 }
@@ -19,9 +31,9 @@ h2 {
 body {
   background-color: white;
   font-family: "ff-tisa-web-pro",serif;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 2.0;
+  line-height: 1.45;
   color: #333;
 }
 
@@ -73,6 +85,8 @@ body {
 .mainmenu a {
   background-color: #CCC;
   text-decoration: none;
+  font-size: 24px
+
   padding: 10px;
   color: #000;
 }
@@ -116,6 +130,8 @@ body {
 }
 
 
+
+
 /* 
   This is the css code that is used for the animations
     */
@@ -141,5 +157,23 @@ body {
   }
 
 
+
+.onLabel {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin: 8px;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: 15%;
+
+}
+
+.green {
+  background: #50EA1B;
+}
+
+.red {
+  background: #B80B0B;
+}
 
 

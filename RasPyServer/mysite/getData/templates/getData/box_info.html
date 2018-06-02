@@ -37,15 +37,19 @@
 
           <div class="column left">
 
-                <h1> Box {{box_nr}} </h1>
+                <h1> 
+                    Box {{box_nr}}
+                    {% if isOnline %}
+                        <div class="onLabel green"></div> 
+                    {% endif %}
 
-                {% if isOnline %}
-                    <font color="green">The box is online!</font> 
-                {% endif %}
+                    {% if not isOnline %}
+                        <div class="onLabel red"></div>  
+                    {% endif %}
 
-                {% if not isOnline %}
-                    <font color="red">The box is offline</font> 
-                {% endif %}
+
+
+
 
 
 

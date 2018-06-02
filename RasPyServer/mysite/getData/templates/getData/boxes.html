@@ -1,70 +1,61 @@
+
+
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'getData/style.css' %}?{% now "U" %}" />
 
- <div class="banner banner3">
-		<h1> RasPySever </h1>
- </div>
 
 
+<header>
+    <nav class="navigation">
+        <ul class="navlist">
+          <li><a href="/getData/">Home</a></li>
+          <li><a href="#news">Box info</a></li>
+          <li><a href="#news">Mouse History</a></li>
+          <li><a href="/getData/set_num_boxes/">Change Number of Boxes</a></li>
 
-<ul>
-
-
-<style>
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 5px;
-    text-align: center;
-}
-</style>
-
-<body>
-<br>
-<br>
-<h2> Control Boxes and Update Info </h2>
-<table class="box_table">
-
-  <tr>
-    <th>Cage Number</th>
-    <th>Mouse ID</th>
-    <th>Task Running</th>
-
-  </tr>
-
-{% for box, mouseID,isOnline in boxs_and_IDs %}
-	<tr>
-		<td>
-			{% if isOnline %}
-				<div class="onLabel green"></div> 
-			{% endif %}
-
-			{% if not isOnline %}
-				<div class="onLabel red"></div>  
-			{% endif %}
-
-
-
-			<a href="/getData/{{box}}/"> Box {{box}} </a> 
-		</td>
-		<td> {{mouseID}}  </td>
-		<td>  None   </td>
-
- <br>
-	</tr>
-{% endfor %}
-
-</body>
-
-
+          <li><a href="/getData/download_data/" > Download Data </a> </li>
 </ul>
 
-</table>
+    </nav>
+</header>
 
-<br>
-<br>
-<br>
-<a href="/getData/download_data/" > <h2> <font color="black" >Download Data Mouse_Wise </font> </h2>
+
+
+<body>
+
+    <h2> Control Boxes and Update Info </h2>
+        <br>
+        <table class="box_table">
+
+        <tr>
+            <th>Cage Number</th>
+            <th>Mouse ID</th>
+            <th>Task Running</th>
+
+        </tr>
+
+            {% for box, mouseID,isOnline in boxs_and_IDs %}
+            <tr>
+                <td>
+                    {% if isOnline %}
+                        <div class="onLabel green"></div> 
+                    {% endif %}
+
+                    {% if not isOnline %}
+                        <div class="onLabel red"></div>  
+                    {% endif %}
+
+                    <a href="/getData/{{box}}/"> Box {{box}} </a> 
+                </td>
+                <td> {{mouseID}}  </td>
+                <td>  None   </td>
+
+            </tr>
+        {% endfor %}
+
+
+
+    </table>
+
+</body>
